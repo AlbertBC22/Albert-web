@@ -113,32 +113,40 @@
     stroke-width: 1;
   }
 
-  /* Rotulador: zigzag vertical que avanza de izquierda a derecha y se "pinta" con
-     stroke-dashoffset. Con non-scaling-stroke el guion se mide en px: el zigzag mide
-     ~1.700–1.850 px en cualquier ancho de botón (lo marcan las ~48 pasadas verticales). */
+  /* Rotulador: zigzag vertical a escala real (ver Button.tsx) que se "pinta" de izquierda
+     a derecha con stroke-dashoffset. El zigzag completo mide ~1.900 px; cada botón solo
+     muestra su tramo, así que el rotulador avanza a la misma velocidad en todos.
+     Al salir no se "despinta" (empezaría por el tramo invisible): se desvanece y se reinicia. */
   .bp-button__scribble {
     position: absolute;
     inset: 2px 0;
     z-index: -1;
     width: 100%;
     height: calc(100% - 4px);
-    overflow: visible;
+    overflow: hidden;
     pointer-events: none;
     fill: none;
     stroke: var(--sky);
     stroke-opacity: 0.55;
-    stroke-width: 6px;
+    stroke-width: 6;
     stroke-linecap: round;
     stroke-linejoin: round;
     /* Hueco algo mayor que el guion: evita un punto suelto (remate redondo) en reposo */
-    stroke-dasharray: 1900px 2000px;
-    stroke-dashoffset: 1900px;
-    transition: stroke-dashoffset 0.65s cubic-bezier(0.45, 0, 0.25, 1);
+    stroke-dasharray: 2100 2200;
+    stroke-dashoffset: 2100;
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      stroke-dashoffset 0s linear 0.25s;
   }
 
   .bp-button:hover .bp-button__scribble,
   .bp-button:focus-visible .bp-button__scribble {
-    stroke-dashoffset: 0px;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition:
+      opacity 0s,
+      stroke-dashoffset 1.1s cubic-bezier(0.3, 0.1, 0.45, 1);
   }
 
   .bp-button__arrow {

@@ -13,17 +13,19 @@ function buttonClass(variant: Variant, className = "") {
 }
 
 // Garabato en zigzag vertical que avanza de izquierda a derecha, como un solo trazo de
-// rotulador. Con preserveAspectRatio="none" se adapta a cualquier tamaño de botón y
-// vector-effect="non-scaling-stroke" mantiene el grosor en px. Los extremos varían un poco
-// para que parezca hecho a mano.
+// rotulador. Se dibuja a escala real (1 unidad ≈ 1 px, 40 de alto) y más largo que
+// cualquier botón: con preserveAspectRatio="xMinYMid slice" cada botón muestra solo el
+// tramo que le cabe, así la separación entre pasadas es la misma en todos (~8 px).
+// Los extremos y el avance varían un poco para que parezca hecho a mano.
+const SCRIBBLE_WIDTH = 480;
 const SCRIBBLE = (() => {
-  const tops = [4, 1, 6, 2, 5, 3];
-  const bottoms = [36, 39, 34, 38, 35, 37];
-  const steps = [1.6, 2.4, 1.9, 2.2, 1.7, 2.1]; // avance irregular entre pasadas
-  let d = "M1 4";
-  for (let i = 1, x = 2.5; x <= 99; i++, x += steps[i % 6]) {
+  const tops = [5, 3, 7, 4, 6, 3];
+  const bottoms = [35, 37, 33, 36, 34, 37];
+  const steps = [7, 9, 7.5, 8.5, 7, 8.5];
+  let d = "M2 5";
+  for (let i = 1, x = 8; x <= SCRIBBLE_WIDTH; i++, x += steps[i % 6]) {
     const y = i % 2 ? bottoms[i % 6] : tops[i % 6];
-    d += ` L${x.toFixed(1)} ${y}`;
+    d += ` L${x} ${y}`;
   }
   return d;
 })();
@@ -33,8 +35,13 @@ const SCRIBBLE = (() => {
 function ButtonContent({ children, arrow }: { children: ReactNode; arrow?: boolean }) {
   return (
     <>
-      <svg aria-hidden viewBox="0 0 100 40" preserveAspectRatio="none" className="bp-button__scribble">
-        <path d={SCRIBBLE} vectorEffect="non-scaling-stroke" />
+      <svg
+        aria-hidden
+        viewBox={`0 0 ${SCRIBBLE_WIDTH} 40`}
+        preserveAspectRatio="xMinYMid slice"
+        className="bp-button__scribble"
+      >
+        <path d={SCRIBBLE} />
       </svg>
       <svg aria-hidden className="bp-button__lines">
         <line x1="0" y1="8" x2="100%" y2="8" />

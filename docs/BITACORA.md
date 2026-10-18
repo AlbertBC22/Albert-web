@@ -79,6 +79,15 @@ Plantilla de entrada (copiar arriba del todo):
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
 
+### 2026-10-18 — Fase 2 ⏸ — Garabato con pasadas más separadas
+- **Hecho**: a petición de Albert, más separación entre las pasadas del garabato (~8 px, igual en todos los botones).
+- **Problemas / notas**:
+  - Con el garabato estirado al ancho del botón (`preserveAspectRatio="none"`), la separación dependía del ancho: los botones estrechos quedaban macizos. Ahora el garabato se dibuja a escala real (480 × 40) y cada botón muestra su tramo (`xMinYMid slice` + `overflow: hidden`). El rotulador avanza a la misma velocidad en todos.
+  - Al salir del hover ya no se "despinta" (empezaría por el tramo invisible y tardaría en notarse): se desvanece en 0,25 s y se reinicia.
+  - Si cambia la altura del botón o el patrón del garabato, revisar `stroke-dasharray` (longitud total ~1.900 px).
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
+
 ### 2026-10-18 — Fase 2 ⏸ — Garabato de izquierda a derecha y más fino
 - **Hecho**: el garabato pasa a ser un zigzag vertical (~48 pasadas con avance y extremos irregulares) que avanza de izquierda a derecha; grosor 6 px constante gracias a `vector-effect="non-scaling-stroke"`.
 - **Problemas / notas**: con `non-scaling-stroke` no se puede usar `pathLength`; el guion se fija en px (`stroke-dasharray: 1900px 2000px`). Funciona porque la longitud del zigzag (~1.700–1.850 px) apenas depende del ancho del botón: la marcan las pasadas verticales. Si se cambia la altura del botón o el nº de pasadas, revisar ese valor.
