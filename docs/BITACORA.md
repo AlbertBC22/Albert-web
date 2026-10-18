@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 0 — Verificación del entorno
-- **Último paso completado**: —
-- **Siguiente paso**: verificar entorno (node, gh, git remoto, MCP de Supabase, Vercel)
-- **Esperando a Albert**: —
+- **Fase actual**: Fase 0 — Verificación del entorno (cerrada, pendiente de PR)
+- **Último paso completado**: verificación del entorno
+- **Siguiente paso**: Fase 1 — Base del proyecto
+- **Esperando a Albert**: revisar el PR de la Fase 0 y confirmar el inicio de la Fase 1
 
 ## Estado por fase
 
@@ -16,7 +16,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 
 | Fase | Nombre | Estado | Rama | PR / preview |
 |---|---|---|---|---|
-| 0 | Verificación del entorno | ☐ | — | — |
+| 0 | Verificación del entorno | ☑ | `fase-00-entorno` | — |
 | 1 | Base del proyecto | ☐ | | |
 | 2 | Sistema de diseño "plano técnico" | ☐ | | |
 | 3 | Página principal (scroll) | ☐ | | |
@@ -44,6 +44,7 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Proyectos como fichas manuales desde el panel; GitHub API al backlog | Simplicidad inicial |
 | 2026-10-18 | Cursor personalizado acorde al estilo de plano | Petición de Albert |
 | 2026-10-18 | Solo modo claro; dominio gratuito de Vercel | Por ahora |
+| 2026-10-18 | `.mcp.json` se versiona en el repo | Solo contiene la URL del MCP con el `project_ref`, que no es secreto |
 
 ## Registro
 
@@ -59,6 +60,20 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 0 — Verificación del entorno
+- **Hecho**: comprobado todo el entorno.
+  - Node v24.22.0 · npm 11.19.1 · git 2.55.0 · gh 2.102.0.
+  - `gh auth status`: cuenta AlbertBC22 activa (scopes `repo`, `workflow`, `gist`, `read:org`).
+  - Remoto `origin` → `https://github.com/AlbertBC22/Albert-web.git`; `main` sincronizada.
+  - MCP de Supabase: esquema `public` vacío; URL del proyecto `https://vavygglppyhueqpywjxt.supabase.co`.
+  - Vercel: proyecto `albert-web` conectado a `AlbertBC22/Albert-web` (confirmado por Albert con captura de *Settings → Git*).
+- **Archivos creados**: `.mcp.json` (pasa a estar versionado).
+- **Archivos modificados**: `docs/BITACORA.md`.
+- **Decisiones**: versionar `.mcp.json`.
+- **Problemas / notas**: `gh` está instalado en `C:\Program Files\GitHub CLI\gh.exe` pero no está en el PATH de las terminales de VS Code. Mientras tanto se usa con la ruta completa; probablemente se arregla reiniciando VS Code.
+- **Pendiente**: comprobar que la *Production Branch* de Vercel es `main` (por defecto lo es).
+- **Verificación**: lint — · typecheck — · build — (no aplica: todavía no hay app)
 
 ### 2026-10-18 — Preparación — Documentación inicial
 - **Hecho**: se crean `CLAUDE.md`, `docs/PLAN.md`, `docs/BITACORA.md` y `docs/CONTENIDO.md`.
