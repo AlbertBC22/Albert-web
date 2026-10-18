@@ -9,7 +9,7 @@ export default function SectionLabel({ index, children, className = "" }: Props)
   return (
     <p className={`label-mono flex items-center gap-3 text-ink-muted ${className}`}>
       <span className="text-sky-ink">REF. {index}</span>
-      <span aria-hidden className="h-px w-8 bg-line" />
+      <span aria-hidden className="pencil pencil-line-x w-8 text-ink" />
       <span>{children}</span>
     </p>
   );

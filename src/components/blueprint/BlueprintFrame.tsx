@@ -44,7 +44,7 @@ export default function BlueprintFrame({ children, className = "" }: Props) {
           data-corner
           aria-hidden
           viewBox="0 0 16 16"
-          className={`absolute size-4 text-ink ${position}`}
+          className={`pencil absolute size-4 overflow-visible text-ink ${position}`}
         >
           <path d="M0.5 16V0.5H16" fill="none" stroke="currentColor" />
         </svg>

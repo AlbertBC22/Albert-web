@@ -77,6 +77,16 @@ Plantilla de entrada (copiar arriba del todo):
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
 
+### 2026-10-18 — Fase 2 ⏸ — Propuesta: trazo a lápiz y botones dibujados a mano
+- **Hecho**: a petición de Albert (los botones le parecían demasiado típicos y quería un aire más "hecho a lápiz"):
+  - Filtro SVG `#bp-pencil` (`PencilFilter.tsx`, montado en el layout): leve temblor + grano de grafito. Utilidades `pencil`, `pencil-line-x` y `pencil-line-y`.
+  - Aplicado solo a líneas: esquinas del marco, cotas, líneas guía de `Annotation` y `SectionLabel`, botones. Texto, cajetín y retícula siguen nítidos.
+  - Botones nuevos: cuatro líneas de construcción que se pasan de las esquinas; al pasar el ratón se redibujan y entra un rayado de sección azul a 45°. Prop `arrow` con flecha dibujada a mano. La variante `accent` lleva el degradado y el rayado tenue siempre visible.
+- **Archivos creados**: `src/components/blueprint/PencilFilter.tsx`.
+- **Archivos modificados**: `globals.css`, `Button.tsx`, `BlueprintFrame.tsx`, `DimensionLine.tsx`, `Annotation.tsx`, `SectionLabel.tsx`, `[locale]/layout.tsx`, `%5Fplano/page.tsx`.
+- **Decisiones**: pendiente de que Albert la acepte. Si no, se revierte este commit.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas en reposo y con hover.
+
 ### 2026-10-18 — Fase 2 ⏸ — Tokens, GSAP y componentes estáticos
 - **Hecho**:
   - Tokens en `globals.css` (`:root` + `@theme inline` de Tailwind 4): colores, fuentes y escala tipográfica (`text-display`, `text-h1`… `text-label`), utilidad `label-mono`, foco visible, selección y estilos del botón de plano (`.bp-button`).

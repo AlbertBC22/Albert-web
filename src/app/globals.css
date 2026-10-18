@@ -84,11 +84,31 @@
 }
 
 /* ==========================================================================
-   Botón de plano: marcas de esquina que se separan al pasar el ratón.
+   Trazo a lápiz (filtro #bp-pencil de PencilFilter.tsx). Solo para líneas.
+   ========================================================================== */
+@utility pencil {
+  filter: url(#bp-pencil);
+}
+
+/* Línea de 1 px centrada en una caja de 7 px: deja margen al temblor del filtro. */
+@utility pencil-line-x {
+  height: 7px;
+  background: linear-gradient(currentColor, currentColor) center / 100% 1px no-repeat;
+}
+
+@utility pencil-line-y {
+  width: 7px;
+  background: linear-gradient(currentColor, currentColor) center / 1px 100% no-repeat;
+}
+
+/* ==========================================================================
+   Botón de plano dibujado a mano: cuatro líneas de construcción que se pasan
+   de las esquinas. Al pasar el ratón se redibujan y aparece un rayado de sección.
    ========================================================================== */
 @layer components {
   .bp-button {
     position: relative;
+    isolation: isolate;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -98,58 +118,105 @@
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--ink);
-    border: 1px solid var(--line);
-    background: var(--paper);
-    transition:
-      border-color 0.2s ease,
-      background-color 0.2s ease;
   }
 
-  .bp-button::before,
-  .bp-button::after {
-    content: "";
+  .bp-button__lines {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    border-color: var(--ink);
-    border-style: solid;
-    transition: transform 0.25s ease;
+    inset: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    overflow: visible;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1;
   }
 
-  .bp-button::before {
-    top: -1px;
-    left: -1px;
-    border-width: 1px 0 0 1px;
+  .bp-button__lines line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
   }
 
-  .bp-button::after {
-    right: -1px;
-    bottom: -1px;
-    border-width: 0 1px 1px 0;
+  /* Rayado de sección a 45°, entra de izquierda a derecha */
+  .bp-button__hatch {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: repeating-linear-gradient(-45deg, var(--sky) 0 1px, transparent 1px 7px);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.45s cubic-bezier(0.7, 0, 0.3, 1);
   }
 
-  .bp-button:hover::before {
-    transform: translate(-4px, -4px);
+  .bp-button__arrow {
+    width: 24px;
+    height: 10px;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
   }
 
-  .bp-button:hover::after {
-    transform: translate(4px, 4px);
+  .bp-button:hover .bp-button__hatch,
+  .bp-button:focus-visible .bp-button__hatch {
+    clip-path: inset(0 0 0 0);
   }
 
-  .bp-button:hover {
-    border-color: var(--ink);
+  .bp-button:hover .bp-button__arrow {
+    transform: translateX(4px);
   }
 
-  /* Variante destacada (CTA): degradado azul cielo sutil */
+  .bp-button:hover .bp-button__lines line {
+    animation: bp-redraw 0.55s ease-out both;
+  }
+
+  /* Trazos escalonados: superior, izquierdo, inferior (en <g>) y derecho (en <g>) */
+  .bp-button:hover .bp-button__lines > line:nth-child(2) {
+    animation-delay: 0.08s;
+  }
+
+  .bp-button:hover .bp-button__lines > :nth-child(3) line {
+    animation-delay: 0.16s;
+  }
+
+  .bp-button:hover .bp-button__lines > :nth-child(4) line {
+    animation-delay: 0.24s;
+  }
+
+  /* Variante destacada (CTA): degradado azul cielo y rayado siempre visible, más tenue */
   .bp-button--accent {
     background: var(--gradient-accent);
-    border-color: var(--sky);
+  }
+
+  .bp-button--accent .bp-button__hatch {
+    clip-path: inset(0 0 0 0);
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+  }
+
+  .bp-button--accent:hover .bp-button__hatch {
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bp-button::before,
-    .bp-button::after {
+    .bp-button__hatch,
+    .bp-button__arrow {
       transition: none;
     }
+
+    .bp-button:hover .bp-button__lines line {
+      animation: none;
+    }
+  }
+}
+
+@keyframes bp-redraw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
