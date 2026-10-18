@@ -126,8 +126,8 @@ export default function DesignSystemPage() {
 
       <Section index="06" title="Botones">
         <div className="flex flex-wrap gap-6">
-          <ButtonLink href="/proyectos" arrow>Ver proyectos</ButtonLink>
-          <ButtonLink href="/contacto" variant="accent" arrow>Contactar</ButtonLink>
+          <ButtonLink href="/proyectos">Ver proyectos →</ButtonLink>
+          <ButtonLink href="/contacto" variant="accent">Contactar →</ButtonLink>
           <Button>Botón</Button>
         </div>
       </Section>

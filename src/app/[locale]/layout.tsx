@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import PencilFilter from "@/components/blueprint/PencilFilter";
 import SiteNav from "@/components/layout/SiteNav";
 import { routing } from "@/i18n/routing";
 import { plexMono, plexSans } from "../fonts";
@@ -23,7 +22,6 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
   return (
     <html lang={locale} className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>
-        <PencilFilter />
         <NextIntlClientProvider>
           <SiteNav />
           <main>{children}</main>

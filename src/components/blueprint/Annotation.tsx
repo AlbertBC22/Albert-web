@@ -9,9 +9,9 @@ type Props = {
 export default function Annotation({ children, className = "" }: Props) {
   return (
     <div className={`flex items-start gap-3 ${className}`}>
-      <span aria-hidden className="pencil mt-[0.2rem] flex shrink-0 items-center text-sky">
-        <span className="size-1.5 rounded-full bg-current" />
-        <span className="pencil-line-x w-10" />
+      <span aria-hidden className="mt-[0.45rem] flex shrink-0 items-center">
+        <span className="size-1.5 rounded-full bg-sky" />
+        <span className="h-px w-10 bg-sky" />
       </span>
       <p className="label-mono text-ink-muted">{children}</p>
     </div>
