@@ -61,6 +61,8 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Cursor: coordenadas del viewport en px con 4 cifras (`X:0412 Y:0218`) | Como las referencias |
 | 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
+| 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul que rellena de arriba abajo al hover | Los botones con marcas de esquina le parecían demasiado típicos |
 
 ## Registro
 
@@ -76,6 +78,16 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Botones con garabato de rotulador
+- **Hecho**:
+  - Se probó un trazo a lápiz (filtro SVG) en todas las líneas y botones dibujados a mano (`f8428c2`). Albert lo descarta para las líneas → revertido (`c7f2aa3`).
+  - Botones nuevos: cuatro líneas de construcción nítidas que se pasan 8 px de las esquinas; al pasar el ratón (o con foco de teclado) un garabato en zigzag de "rotulador" azul cielo los rellena de arriba abajo (`stroke-dashoffset` con `pathLength=1`) y la flecha opcional (`arrow`) avanza. Al salir, se "despinta" en sentido inverso. La variante `accent` conserva el degradado de base.
+- **Archivos modificados**: `src/components/blueprint/Button.tsx`, `src/app/globals.css`, `src/app/[locale]/%5Fplano/page.tsx`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - `vector-effect="non-scaling-stroke"` rompe `pathLength` en Chromium (el garabato se quedaba a medias). El grosor va en unidades del viewBox.
+  - Con `stroke-dasharray: 1` y remate redondo quedaba un punto visible en reposo; se usa `1 1.1`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas en reposo, a mitad y al final del hover.
 
 ### 2026-10-18 — Fase 2 ⏸ — Tokens, GSAP y componentes estáticos
 - **Hecho**:
