@@ -43,5 +43,31 @@
   "NotFoundPage": {
     "title": "Page not found",
     "back": "Back to home"
+  },
+  "Header": {
+    "role": "Software Developer",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "Footer": {
+    "label": "Drawing title block",
+    "author": "Author",
+    "project": "Project",
+    "sheet": "Sheet no.",
+    "scale": "Scale",
+    "revision": "Revision",
+    "language": "Language"
+  },
+  "Cursor": {
+    "view": "View"
+  },
+  "Loader": {
+    "label": "Loading",
+    "role": "Software Developer · Barcelona",
+    "step1": "Drawing grid",
+    "step2": "Setting margins",
+    "step3": "Developing photographs",
+    "step4": "Signing title block",
+    "skip": "Skip"
   }
 }

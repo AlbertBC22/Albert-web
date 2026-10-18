@@ -1,12 +1,362 @@
 @import "tailwindcss";
 
-/* Provisional: los tokens del sistema de diseño "plano técnico" se definen en la Fase 2. Solo modo claro. */
+/* ==========================================================================
+   Tokens del sistema de diseño "plano técnico". Solo modo claro.
+   ========================================================================== */
 :root {
   --paper: #ffffff;
   --ink: #0a0a0a;
+  --ink-muted: #5a5a5a;
+  --line: rgba(10, 10, 10, 0.14);
+  --grid: rgba(56, 189, 248, 0.1); /* líneas principales de la retícula (cada 80 px) */
+  --grid-minor: rgba(56, 189, 248, 0.05); /* líneas finas de la retícula (cada 16 px) */
+  --sky: #38bdf8; /* acento gráfico: líneas, cursor, detalles. Nunca para texto. */
+  --sky-soft: #e0f2fe; /* fondos de resalte */
+  --sky-ink: #0369a1; /* azul para texto (AA sobre blanco) */
+  --gradient-accent: linear-gradient(90deg, #e0f2fe 0%, rgba(224, 242, 254, 0) 100%);
 }
 
-body {
-  background: var(--paper);
-  color: var(--ink);
+/* Tokens expuestos a Tailwind: bg-paper, text-ink, border-line, font-mono, text-h1... */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-sky-ink: var(--sky-ink);
+
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Escala tipográfica fluida */
+  --text-display: clamp(3rem, 8vw, 7.5rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.03em;
+  --text-h1: clamp(2.25rem, 5vw, 4rem);
+  --text-h1--line-height: 1.05;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 3vw, 2.5rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.3;
+  --text-lead: 1.125rem;
+  --text-lead--line-height: 1.6;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.4;
+}
+
+/* Etiquetas monoespaciadas: REF. 02 — EXPERIENCIA, cotas, fichas... */
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--sky-soft);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--sky-ink);
+    outline-offset: 3px;
+  }
+}
+
+/* ==========================================================================
+   Botón de plano: cuatro líneas de construcción que se pasan de las esquinas.
+   Al pasar el ratón, un garabato de rotulador lo rellena de arriba abajo.
+   ========================================================================== */
+@layer components {
+  .bp-button {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+  }
+
+  .bp-button__lines {
+    position: absolute;
+    inset: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    overflow: visible;
+    pointer-events: none;
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+
+  /* Rotulador: zigzag a medida del botón (Scribble.tsx) que se "pinta" de izquierda a
+     derecha con stroke-dashoffset; su longitud exacta llega en --scribble-length.
+     Al salir se desvanece y se reinicia. */
+  .bp-button__scribble {
+    position: absolute;
+    inset: 2px 0;
+    z-index: -1;
+    width: 100%;
+    height: calc(100% - 4px);
+    overflow: hidden;
+    pointer-events: none;
+    fill: none;
+    stroke: var(--sky);
+    stroke-opacity: 0.55;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    /* Hueco mayor que el guion: evita un punto suelto (remate redondo) en reposo */
+    stroke-dasharray: var(--scribble-length, 2000px) 9999px;
+    stroke-dashoffset: var(--scribble-length, 2000px);
+    opacity: 0;
+    transition:
+      opacity 0.25s ease,
+      stroke-dashoffset 0s linear 0.25s;
+  }
+
+  .bp-button:hover .bp-button__scribble,
+  .bp-button:focus-visible .bp-button__scribble {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition:
+      opacity 0s,
+      stroke-dashoffset 0.7s cubic-bezier(0.35, 0.1, 0.4, 1);
+  }
+
+  .bp-button__arrow {
+    width: 24px;
+    height: 10px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    transition: transform 0.3s ease;
+  }
+
+  .bp-button:hover .bp-button__arrow {
+    transform: translateX(4px);
+  }
+
+  /* Variante destacada (CTA): degradado azul cielo de base */
+  .bp-button--accent {
+    background: var(--gradient-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bp-button__scribble,
+    .bp-button__arrow {
+      transition: none;
+    }
+  }
+}
+
+/* ==========================================================================
+   Cursor de replanteo (CustomCursor.tsx). Solo existe con ratón y sin reduced motion.
+   ========================================================================== */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none;
+}
+
+/* En campos de texto, cursor nativo (el personalizado se oculta) */
+.has-custom-cursor :is(input, textarea, [contenteditable="true"]) {
+  cursor: text;
+}
+
+@layer components {
+  .bp-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 110; /* por encima de la pantalla de carga */
+    pointer-events: none;
+    will-change: transform;
+    transition: opacity 0.2s ease;
+  }
+
+  .bp-cursor[data-mode="hidden"] {
+    opacity: 0;
+  }
+
+  /* Cruz: dos líneas de 21 px centradas en el punto */
+  .bp-cursor__cross::before,
+  .bp-cursor__cross::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+    /* Halo blanco: la cruz sigue viéndose sobre fotos o fondos oscuros */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.75);
+    transition:
+      transform 0.25s ease,
+      opacity 0.2s ease;
+  }
+
+  .bp-cursor__cross::before {
+    top: 0;
+    left: -10px;
+    width: 21px;
+    height: 1px;
+  }
+
+  .bp-cursor__cross::after {
+    top: -10px;
+    left: 0;
+    width: 1px;
+    height: 21px;
+  }
+
+  .bp-cursor:is([data-mode="link"], [data-mode="view"]) .bp-cursor__cross::before,
+  .bp-cursor:is([data-mode="link"], [data-mode="view"]) .bp-cursor__cross::after {
+    transform: scale(0.35);
+  }
+
+  /* Marco de corchetes: cuatro esquinas dibujadas con degradados */
+  .bp-cursor__frame {
+    --size: 34px;
+    --arm: 8px;
+    position: absolute;
+    top: calc(var(--size) / -2);
+    left: calc(var(--size) / -2);
+    width: var(--size);
+    height: var(--size);
+    opacity: 0;
+    transform: scale(0.4);
+    background:
+      linear-gradient(var(--ink), var(--ink)) top left / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top left / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top right / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top right / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom left / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom left / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom right / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom right / 1px var(--arm) no-repeat;
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      width 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      height 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      top 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      left 0.3s cubic-bezier(0.3, 0.7, 0.4, 1);
+  }
+
+  .bp-cursor[data-mode="link"] .bp-cursor__frame {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Sobre fotos: marco más grande con "VER" */
+  .bp-cursor[data-mode="view"] .bp-cursor__frame {
+    --size: 76px;
+    --arm: 12px;
+    opacity: 1;
+    transform: scale(1);
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+
+  .bp-cursor__view {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .bp-cursor[data-mode="view"] .bp-cursor__view {
+    opacity: 1;
+  }
+
+  .bp-cursor__coords {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 10px;
+    white-space: nowrap;
+    color: var(--ink-muted);
+    text-shadow:
+      0 0 2px #fff,
+      0 0 2px #fff;
+    transition: transform 0.3s ease;
+  }
+
+  .bp-cursor[data-mode="view"] .bp-cursor__coords {
+    transform: translate(26px, 26px);
+  }
+}
+
+/* ==========================================================================
+   Pantalla de carga (Loader.tsx + LoaderScript.tsx)
+   ========================================================================== */
+html.loader-active {
+  overflow: hidden;
+}
+
+.loader-off .bp-loader {
+  display: none;
+}
+
+@layer components {
+  .bp-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow: hidden;
+    /* Seguridad: si algo falla en JS, desaparece sola a los 6 s */
+    animation: bp-loader-failsafe 0s linear 6s forwards;
+  }
+
+  /* Estados iniciales (los anima GSAP): así no se ve la composición final antes de hidratar */
+  .bp-loader [data-grid-v] {
+    transform: scaleY(0);
+  }
+
+  .bp-loader [data-grid-h] {
+    transform: scaleX(0);
+  }
+
+  .bp-loader [data-progress],
+  .bp-loader [data-seam] {
+    transform: scaleX(0);
+  }
+
+  .bp-loader [data-name] {
+    transform: translateY(110%);
+  }
+
+  .bp-loader :is([data-corner], [data-meta], [data-role], [data-step], [data-step-ok]) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@keyframes bp-loader-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
 }

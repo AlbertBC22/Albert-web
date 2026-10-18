@@ -5,6 +5,10 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
+  // Fecha de revisión del cajetín = fecha del build (AAAA-MM-DD)
+  env: {
+    NEXT_PUBLIC_BUILD_DATE: new Date().toISOString().slice(0, 10),
+  },
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

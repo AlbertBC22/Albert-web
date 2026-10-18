@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 1 — Base del proyecto (⏸ punto de control: variables de entorno)
-- **Último paso completado**: app base con next-intl, clientes de Supabase, proxy y páginas placeholder
-- **Siguiente paso**: push → PR → preview en Vercel → merge → primer despliegue en producción
-- **Esperando a Albert**: añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (Production y Preview)
+- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (cerrada en local, pendiente de PR)
+- **Último paso completado**: bloque B: cursor de replanteo, pantalla de carga y layout global (cabecera + cajetín)
+- **Siguiente paso**: push → PR → preview en Vercel → merge; después, Fase 3 — Página principal
+- **Esperando a Albert**: autorizar el push y revisar la preview
 
 ## Estado por fase
 
@@ -17,8 +17,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | Fase | Nombre | Estado | Rama | PR / preview |
 |---|---|---|---|---|
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
-| 1 | Base del proyecto | ⏸ | `fase-01-base` | |
-| 2 | Sistema de diseño "plano técnico" | ☐ | | |
+| 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
+| 2 | Sistema de diseño "plano técnico" | ◐ (cerrada en local) | `fase-02-diseno` | |
 | 3 | Página principal (scroll) | ☐ | | |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
@@ -53,6 +53,17 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | `engines.node >= 24` en `package.json` | Misma versión de Node en local y en Vercel |
 | 2026-10-18 | Sin Prettier por ahora | Simplicidad |
 | 2026-10-18 | Se usa la clave `sb_publishable_…` (no la anon legacy) | Recomendación de Supabase para apps nuevas |
+| 2026-10-18 | Tokens de color de `CLAUDE.md` sin cambios, + `--grid-minor` para las líneas finas de la retícula | Confirmado por Albert; revisión visual más adelante si hace falta |
+| 2026-10-18 | IBM Plex Sans (300–600) + Plex Mono (400–500) con `next/font`; escala fluida display/h1/h2/h3/lead/label | Confirmado por Albert |
+| 2026-10-18 | Espaciado en múltiplos de 8 px; retícula de fondo cada 16 px (finas) y 80 px (principales) | Una retícula de 8 px resulta demasiado densa en pantalla |
+| 2026-10-18 | Sin scroll suave | Accesibilidad y simplicidad |
+| 2026-10-18 | Página interna en `/es/_plano` (carpeta `%5Fplano`), `noindex` | Las carpetas con `_` son privadas en Next.js |
+| 2026-10-18 | Cursor: coordenadas del viewport en px con 4 cifras (`X:0412 Y:0218`) | Como las referencias |
+| 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
+| 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
+| 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
+| 2026-10-18 | **Descartado** el "toque plateado" (incluido el garabato plateado): se mantienen tinta y azul cielo | Probado y no le convenció |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
 
@@ -68,6 +79,108 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 2 — Bloque B: cursor, pantalla de carga y layout global
+- **Hecho**:
+  - **Cursor de replanteo** (`CustomCursor`): cruz fina con halo blanco + lectura `X:0000 Y:0000`; marco de corchetes sobre enlaces y botones; marco con "VER" sobre `img` o `[data-cursor="view"]`; cursor nativo en campos de texto. Solo con `pointer: fine` y sin reduced motion (`useSyncExternalStore` sobre las media queries). Posición escrita directamente en el DOM, sin re-render por movimiento.
+  - **Pantalla de carga** (`Loader` + `LoaderScript`): retícula que se traza desde el centro, marco con esquinas (DrawSVG), nombre revelado con máscara, pasos numerados con OK, cota de progreso con el %, y salida con un corte horizontal y apertura en dos hojas (~2,3 s en total). Primera visita de la sesión (`sessionStorage`), se salta con clic, Esc o el botón "[ Saltar ]". Un script en `<head>` la oculta antes de pintar si ya se vio o con reduced motion; `<noscript>` la oculta sin JS; failsafe CSS a los 6 s. Bloquea el scroll mientras se ve.
+  - **Layout global**: retícula de fondo en todas las páginas; cabecera fija con firma, índice de planos `[00] Inicio…` (página activa marcada, menú desplegable en móvil) y selector `ES / EN`; pie con el cajetín (autor, proyecto, nº de plano por página `AB-00…AB-04`, `AB-99` en `_plano`, escala 1:1, revisión = fecha del build, idioma).
+  - Páginas provisionales con el mismo contenedor que la cabecera y el cajetín.
+- **Archivos creados**: `src/components/blueprint/CustomCursor.tsx`, `src/components/layout/{SiteHeader,HeaderNav,SiteFooter,SheetNumber,Loader,LoaderScript}.tsx`, `src/lib/loader.ts`.
+- **Archivos modificados**: `src/app/[locale]/layout.tsx`, `src/app/globals.css`, `src/components/layout/LocaleSwitcher.tsx`, `next.config.ts` (`NEXT_PUBLIC_BUILD_DATE`), `src/messages/{es,en}.json`, páginas provisionales, `%5Fplano/page.tsx` (la retícula pasa al layout), `docs/BITACORA.md`.
+- **Archivos eliminados**: `src/components/layout/SiteNav.tsx` (sustituido por `SiteHeader` + `HeaderNav`).
+- **Problemas / notas**:
+  - Una constante exportada desde un archivo `"use client"` llega al servidor como referencia de cliente, no como valor → la clave del loader vive en `src/lib/loader.ts`.
+  - GSAP lee un `transform` puesto por CSS como píxeles: con estado inicial en CSS hay que usar `fromTo` (y `y: 0` cuando se anima `yPercent`).
+  - La cruz negra desaparecía sobre fondos oscuros → halo blanco (`box-shadow` / `text-shadow`). Se descartó `mix-blend-mode` porque invertiría el marco de "VER".
+  - En las rutas `[slug]` la navegación de la cabecera y el nº de plano se resuelven al recibir la petición (dentro de `Suspense`), por `cacheComponents`.
+  - La duración real del loader (~2,3 s con la apertura) es algo mayor que los ~1,6 s previstos: 1,45 s de dibujo + ~0,9 s de apertura.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · pruebas con Playwright + Edge: secuencia del loader, no reaparece al recargar, cursor (normal / enlace / foto / fondo oscuro), nº de plano y enlace activo correctos (`/es/_plano` → AB-99, `/en/projects/albert-web` → AB-02), móvil sin cursor ni scroll horizontal con menú desplegable, reduced motion sin loader ni cursor, sin errores de consola.
+
+### 2026-10-18 — Fase 2 ⏸ — Plateado descartado: garabato azul de nuevo
+- **Hecho**: Albert descarta también el garabato plateado. `globals.css` y `Scribble.tsx` se restauran tal cual estaban en `ea9f65e` (garabato azul cielo, opacidad 0,55). El código de `src/` queda idéntico al de antes de la prueba.
+- **Archivos modificados**: `src/app/globals.css`, `src/components/blueprint/Scribble.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · captura de los botones.
+
+### 2026-10-18 — Fase 2 ⏸ — Del plateado, solo el garabato
+- **Hecho**: Albert se queda solo con el garabato plateado. Se eliminan la clase `theme-silver`, los títulos metálicos, las líneas plateadas, el brillo plateado de los resaltes y los tokens `--stroke` / `--stroke-muted` (sin tema que alternar ya no aportan nada). Los componentes vuelven a `text-ink`, `text-ink-muted` y `border-ink`.
+- Queda: degradado plateado del garabato (`--scribble-silver` #C3C8CE → `--scribble-silver-dark` #79808A → `--scribble-silver`, opacidad 0,8) en `Scribble.tsx`.
+- **Archivos modificados**: `globals.css`, `[locale]/layout.tsx`, `Scribble.tsx`, `BlueprintFrame.tsx`, `DimensionLine.tsx`, `TitleBlock.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas.
+
+### 2026-10-18 — Fase 2 ⏸ — PRUEBA: tema plateado
+- **Hecho**: a petición de Albert, prueba de "un toque de plateado a todo", reversible:
+  - Clase `theme-silver` en `<html>` (layout) que sobrescribe tokens: líneas de dibujo en gris plata (`--stroke`, `--stroke-muted`), resaltes y CTA con brillo plateado (`--gradient-accent`), garabato del botón en degradado plateado (`--scribble-from/to`, `--scribble-opacity`) y títulos grandes (`text-display`, `text-h1`, `text-h2`) con texto metálico grafito → plata.
+  - Se mantienen en azul la retícula, las etiquetas `REF.`, las anotaciones y el foco.
+  - Refactor de apoyo: los componentes usan `text-stroke`, `text-stroke-muted` y `border-stroke` en lugar de `ink` para sus líneas; el garabato toma el color de un degradado SVG con variables CSS (sin cambios visibles con el tema por defecto).
+- **Archivos modificados**: `globals.css`, `[locale]/layout.tsx`, `Scribble.tsx`, `BlueprintFrame.tsx`, `DimensionLine.tsx`, `TitleBlock.tsx`, `docs/BITACORA.md`.
+- **Decisiones**: pendiente de Albert. Si no le convence, se revierte este commit.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas comparativas con y sin plateado.
+
+### 2026-10-18 — Fase 2 ⏸ — Separación del garabato a 6 px · cierre del bloque A
+- **Hecho**: separación entre pasadas del garabato reducida a ~6 px (`STEPS` en `Scribble.tsx`), a petición de Albert. Con esto da por bueno el aspecto de los botones y el bloque A.
+- **Archivos modificados**: `src/components/blueprint/Scribble.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los botones.
+
+### 2026-10-18 — Fase 2 ⏸ — Remate del garabato en línea
+- **Hecho**: el garabato ya no es uniforme: en el último tramo (30 % del ancho, máx. 70 px) el zigzag pierde altura hasta acabar en una línea horizontal en el borde derecho, como el remate de un trazo.
+- **Archivos creados**: `src/components/blueprint/Scribble.tsx` (componente de cliente).
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Decisiones**: para rematar justo en el borde hay que conocer el ancho del botón → `Scribble` lo mide con `ResizeObserver`, genera el trazo en px reales y pasa su longitud exacta (`getTotalLength`) en `--scribble-length` al `<svg>`. Desaparecen el valor fijo de `stroke-dasharray` y el truco del `slice`. Animación: 0,7 s.
+- **Problemas / notas**: la variable CSS debe ir en el `<svg>` (donde se resuelve `stroke-dasharray`), no en el `<path>`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
+
+### 2026-10-18 — Fase 2 ⏸ — Garabato con pasadas más separadas
+- **Hecho**: a petición de Albert, más separación entre las pasadas del garabato (~8 px, igual en todos los botones).
+- **Problemas / notas**:
+  - Con el garabato estirado al ancho del botón (`preserveAspectRatio="none"`), la separación dependía del ancho: los botones estrechos quedaban macizos. Ahora el garabato se dibuja a escala real (480 × 40) y cada botón muestra su tramo (`xMinYMid slice` + `overflow: hidden`). El rotulador avanza a la misma velocidad en todos.
+  - Al salir del hover ya no se "despinta" (empezaría por el tramo invisible y tardaría en notarse): se desvanece en 0,25 s y se reinicia.
+  - Si cambia la altura del botón o el patrón del garabato, revisar `stroke-dasharray` (longitud total ~1.900 px).
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
+
+### 2026-10-18 — Fase 2 ⏸ — Garabato de izquierda a derecha y más fino
+- **Hecho**: el garabato pasa a ser un zigzag vertical (~48 pasadas con avance y extremos irregulares) que avanza de izquierda a derecha; grosor 6 px constante gracias a `vector-effect="non-scaling-stroke"`.
+- **Problemas / notas**: con `non-scaling-stroke` no se puede usar `pathLength`; el guion se fija en px (`stroke-dasharray: 1900px 2000px`). Funciona porque la longitud del zigzag (~1.700–1.850 px) apenas depende del ancho del botón: la marcan las pasadas verticales. Si se cambia la altura del botón o el nº de pasadas, revisar ese valor.
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
+
+### 2026-10-18 — Fase 2 ⏸ — Botones con garabato de rotulador
+- **Hecho**:
+  - Se probó un trazo a lápiz (filtro SVG) en todas las líneas y botones dibujados a mano (`f8428c2`). Albert lo descarta para las líneas → revertido (`c7f2aa3`).
+  - Botones nuevos: cuatro líneas de construcción nítidas que se pasan 8 px de las esquinas; al pasar el ratón (o con foco de teclado) un garabato en zigzag de "rotulador" azul cielo los rellena de arriba abajo (`stroke-dashoffset` con `pathLength=1`) y la flecha opcional (`arrow`) avanza. Al salir, se "despinta" en sentido inverso. La variante `accent` conserva el degradado de base.
+- **Archivos modificados**: `src/components/blueprint/Button.tsx`, `src/app/globals.css`, `src/app/[locale]/%5Fplano/page.tsx`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - `vector-effect="non-scaling-stroke"` rompe `pathLength` en Chromium (el garabato se quedaba a medias). El grosor va en unidades del viewBox.
+  - Con `stroke-dasharray: 1` y remate redondo quedaba un punto visible en reposo; se usa `1 1.1`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas en reposo, a mitad y al final del hover.
+
+### 2026-10-18 — Fase 2 ⏸ — Tokens, GSAP y componentes estáticos
+- **Hecho**:
+  - Tokens en `globals.css` (`:root` + `@theme inline` de Tailwind 4): colores, fuentes y escala tipográfica (`text-display`, `text-h1`… `text-label`), utilidad `label-mono`, foco visible, selección y estilos del botón de plano (`.bp-button`).
+  - IBM Plex Sans y Plex Mono con `next/font` (`src/app/fonts.ts`).
+  - GSAP 3.15 + `@gsap/react`: registro único de ScrollTrigger, DrawSVG y SplitText en `src/lib/animations/gsap.ts`; `MOTION_OK` y `prefersReducedMotion()` en `motion.ts`.
+  - Componentes en `src/components/blueprint/`: `GridBackground`, `BlueprintFrame` (esquinas con DrawSVG), `DimensionLine` (cota horizontal/vertical que se extiende desde el valor), `SectionLabel`, `Annotation`, `SpecList`, `CornerCoords`, `TitleBlock`, `AccentHighlight`, `Button` / `ButtonLink`.
+  - Página interna `/es/_plano` con todos los componentes, colores y escala tipográfica.
+- **Archivos creados**: `src/app/fonts.ts`, `src/lib/animations/{gsap,motion}.ts`, `src/components/blueprint/*` (11 componentes en 10 archivos), `src/app/[locale]/%5Fplano/page.tsx`.
+- **Archivos modificados**: `src/app/globals.css`, `src/app/[locale]/layout.tsx` (fuentes), `package.json` / `package-lock.json` (gsap, @gsap/react), `docs/BITACORA.md`.
+- **Decisiones**: ver tabla.
+- **Problemas / notas**:
+  - En Tailwind 4 dos clases `rotate-*` en el mismo elemento no se suman (gana una): cada flecha de cota lleva una única rotación.
+  - Las animaciones solo se crean con `prefers-reduced-motion: no-preference` (`gsap.matchMedia`); sin JS o con movimiento reducido todo se ve dibujado.
+  - Revisión visual con capturas (Playwright + Edge, fuera del repo) en escritorio (1440) y móvil (390). El modo `--screenshot` de Edge headless no ejecuta bien las animaciones; no sirve para revisarlas.
+  - Al parar `next start` en segundo plano en Windows, el proceso `node` puede quedar vivo ocupando el puerto. Hay que cerrarlo por PID.
+  - Hay un paquete `node` instalado en `C:\Users\AlbertBatiste\node_modules` (junto al `package-lock.json` suelto de la carpeta de usuario). No afecta al proyecto.
+- **Pendiente**: bloque B (cursor, pantalla de carga, layout global).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑
+
+### 2026-10-18 — Fase 1 — Cierre: preview y producción
+- **Hecho**: variables de Supabase añadidas en Vercel (tipo *Config*, Production y Preview). PR #2 con preview correcta, merge a `main` y primer despliegue en producción.
+- **Problemas / notas**:
+  - Vercel marca como posible fuga las variables `NEXT_PUBLIC_…KEY` y no deja guardarlas como *Secret*. Hay que crearlas como **Config** (son públicas por diseño). Un *Secret* ya guardado no se puede pasar a *Config*: hay que borrarlo y crearlo de nuevo.
+  - Las previews están protegidas con Vercel Authentication (solo Albert las ve con sesión iniciada).
+  - `albert-web.vercel.app` pertenece a otra persona; el dominio de producción es **https://albert-web-iota.vercel.app**.
+- **Verificación**: rutas probadas en producción: `/` → `/es` o `/en`, pathnames localizados, redirección `/en/formacion` → `/en/education`, `[slug]`, 404.
 
 ### 2026-10-18 — Fase 1 ⏸ — App base, i18n, Supabase y placeholders
 - **Hecho**:
@@ -114,7 +227,7 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
 - Integración con la API de GitHub para proyectos.
 - Versión en catalán.
-- Dominio propio.
+- Dominio propio. Mientras tanto, opción gratuita: añadir un subdominio `.vercel.app` más bonito (p. ej. `albertbatiste.vercel.app`) si está libre.
 - Notificación por email al recibir un mensaje de contacto.
 - Captcha invisible si llega spam.
 - Ampliar el panel admin (contenido del CV, estadísticas).

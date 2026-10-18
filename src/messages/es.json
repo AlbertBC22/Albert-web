@@ -43,5 +43,31 @@
   "NotFoundPage": {
     "title": "Página no encontrada",
     "back": "Volver al inicio"
+  },
+  "Header": {
+    "role": "Software Developer",
+    "menu": "Menú",
+    "close": "Cerrar"
+  },
+  "Footer": {
+    "label": "Cajetín del plano",
+    "author": "Autor",
+    "project": "Proyecto",
+    "sheet": "Nº plano",
+    "scale": "Escala",
+    "revision": "Revisión",
+    "language": "Idioma"
+  },
+  "Cursor": {
+    "view": "Ver"
+  },
+  "Loader": {
+    "label": "Cargando",
+    "role": "Software Developer · Barcelona",
+    "step1": "Trazando retícula",
+    "step2": "Acotando márgenes",
+    "step3": "Revelando fotografías",
+    "step4": "Firmando cajetín",
+    "skip": "Saltar"
   }
 }
