@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 1 — Base del proyecto (⏸ punto de control: variables de entorno)
-- **Último paso completado**: app base con next-intl, clientes de Supabase, proxy y páginas placeholder
-- **Siguiente paso**: push → PR → preview en Vercel → merge → primer despliegue en producción
-- **Esperando a Albert**: añadir `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` en Vercel (Production y Preview)
+- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (bloque A: tokens, GSAP y componentes estáticos)
+- **Último paso completado**: Fase 1 cerrada; producción en https://albert-web-iota.vercel.app
+- **Siguiente paso**: ⏸ revisión de componentes en `/es/_plano`
+- **Esperando a Albert**: —
 
 ## Estado por fase
 
@@ -17,8 +17,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | Fase | Nombre | Estado | Rama | PR / preview |
 |---|---|---|---|---|
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
-| 1 | Base del proyecto | ⏸ | `fase-01-base` | |
-| 2 | Sistema de diseño "plano técnico" | ☐ | | |
+| 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
+| 2 | Sistema de diseño "plano técnico" | ◐ | `fase-02-diseno` | |
 | 3 | Página principal (scroll) | ☐ | | |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
@@ -69,6 +69,14 @@ Plantilla de entrada (copiar arriba del todo):
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
 
+### 2026-10-18 — Fase 1 — Cierre: preview y producción
+- **Hecho**: variables de Supabase añadidas en Vercel (tipo *Config*, Production y Preview). PR #2 con preview correcta, merge a `main` y primer despliegue en producción.
+- **Problemas / notas**:
+  - Vercel marca como posible fuga las variables `NEXT_PUBLIC_…KEY` y no deja guardarlas como *Secret*. Hay que crearlas como **Config** (son públicas por diseño). Un *Secret* ya guardado no se puede pasar a *Config*: hay que borrarlo y crearlo de nuevo.
+  - Las previews están protegidas con Vercel Authentication (solo Albert las ve con sesión iniciada).
+  - `albert-web.vercel.app` pertenece a otra persona; el dominio de producción es **https://albert-web-iota.vercel.app**.
+- **Verificación**: rutas probadas en producción: `/` → `/es` o `/en`, pathnames localizados, redirección `/en/formacion` → `/en/education`, `[slug]`, 404.
+
 ### 2026-10-18 — Fase 1 ⏸ — App base, i18n, Supabase y placeholders
 - **Hecho**:
   - App creada con `create-next-app@16.4.2` (TypeScript, App Router, Tailwind 4, ESLint, `src/`, `@/*`) en carpeta temporal y movida sin tocar `CLAUDE.md`, `docs/` ni `.mcp.json`. Eliminados la página de ejemplo, las fuentes Geist, el modo oscuro de la plantilla y los SVG de `public/`.
@@ -114,7 +122,7 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
 - Integración con la API de GitHub para proyectos.
 - Versión en catalán.
-- Dominio propio.
+- Dominio propio. Mientras tanto, opción gratuita: añadir un subdominio `.vercel.app` más bonito (p. ej. `albertbatiste.vercel.app`) si está libre.
 - Notificación por email al recibir un mensaje de contacto.
 - Captcha invisible si llega spam.
 - Ampliar el panel admin (contenido del CV, estadísticas).
