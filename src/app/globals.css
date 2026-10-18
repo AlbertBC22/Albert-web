@@ -14,45 +14,9 @@
   --sky-soft: #e0f2fe; /* fondos de resalte */
   --sky-ink: #0369a1; /* azul para texto (AA sobre blanco) */
   --gradient-accent: linear-gradient(90deg, #e0f2fe 0%, rgba(224, 242, 254, 0) 100%);
-  --stroke: var(--ink); /* líneas de dibujo: marcos, botones, cajetín */
-  --stroke-muted: var(--ink-muted); /* líneas secundarias: cotas */
-  --scribble-from: var(--sky); /* garabato del botón (degradado) */
-  --scribble-to: var(--sky);
-}
-
-/* --------------------------------------------------------------------------
-   PRUEBA: tema plateado (clase en <html>). Añade plata sin quitar el azul.
-   -------------------------------------------------------------------------- */
-.theme-silver {
-  --stroke: #9aa1a9;
-  --stroke-muted: #a9afb6;
-  --gradient-accent: linear-gradient(
-    100deg,
-    #eef0f2 0%,
-    #fbfbfc 22%,
-    #d9dde1 48%,
-    #f4f5f6 70%,
-    rgba(244, 245, 246, 0) 100%
-  );
-  --scribble-from: #c3c8ce;
-  --scribble-to: #79808a;
-  --scribble-opacity: 0.8;
-  /* Texto metálico: grafito → plata → grafito (contraste ≥ 3:1 para texto grande) */
-  --silver-text: linear-gradient(
-    180deg,
-    #2b2f34 0%,
-    #5d636b 38%,
-    #8b9199 50%,
-    #4a5057 62%,
-    #2b2f34 100%
-  );
-}
-
-.theme-silver :is(.text-display, .text-h1, .text-h2) {
-  background: var(--silver-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  /* Garabato plateado de los botones: degradado plata → grafito claro → plata (Scribble.tsx) */
+  --scribble-silver: #c3c8ce;
+  --scribble-silver-dark: #79808a;
 }
 
 /* Tokens expuestos a Tailwind: bg-paper, text-ink, border-line, font-mono, text-h1... */
@@ -64,8 +28,6 @@
   --color-sky: var(--sky);
   --color-sky-soft: var(--sky-soft);
   --color-sky-ink: var(--sky-ink);
-  --color-stroke: var(--stroke);
-  --color-stroke-muted: var(--stroke-muted);
 
   --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
@@ -150,7 +112,7 @@
     height: calc(100% + 16px);
     overflow: visible;
     pointer-events: none;
-    stroke: var(--stroke);
+    stroke: var(--ink);
     stroke-width: 1;
   }
 
@@ -166,8 +128,8 @@
     overflow: hidden;
     pointer-events: none;
     fill: none;
-    /* El color lo pone el degradado de Scribble.tsx (--scribble-from / --scribble-to) */
-    stroke-opacity: var(--scribble-opacity, 0.55);
+    /* El color lo pone el degradado plateado de Scribble.tsx */
+    stroke-opacity: 0.8;
     stroke-width: 6;
     stroke-linecap: round;
     stroke-linejoin: round;

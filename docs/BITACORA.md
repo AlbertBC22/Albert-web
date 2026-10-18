@@ -62,7 +62,8 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 | 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
-| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
+| 2026-10-18 | Prueba de "toque plateado" en todo: Albert solo conserva el **garabato plateado** de los botones; el resto sigue en tinta y azul | Lo demás no le convenció |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador (plateado; trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
 
@@ -78,6 +79,12 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Del plateado, solo el garabato
+- **Hecho**: Albert se queda solo con el garabato plateado. Se eliminan la clase `theme-silver`, los títulos metálicos, las líneas plateadas, el brillo plateado de los resaltes y los tokens `--stroke` / `--stroke-muted` (sin tema que alternar ya no aportan nada). Los componentes vuelven a `text-ink`, `text-ink-muted` y `border-ink`.
+- Queda: degradado plateado del garabato (`--scribble-silver` #C3C8CE → `--scribble-silver-dark` #79808A → `--scribble-silver`, opacidad 0,8) en `Scribble.tsx`.
+- **Archivos modificados**: `globals.css`, `[locale]/layout.tsx`, `Scribble.tsx`, `BlueprintFrame.tsx`, `DimensionLine.tsx`, `TitleBlock.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas.
 
 ### 2026-10-18 — Fase 2 ⏸ — PRUEBA: tema plateado
 - **Hecho**: a petición de Albert, prueba de "un toque de plateado a todo", reversible:

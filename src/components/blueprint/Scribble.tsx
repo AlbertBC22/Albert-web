@@ -53,7 +53,7 @@ export default function Scribble() {
     svgRef.current?.style.setProperty("--scribble-length", `${Math.ceil(path.getTotalLength()) + 1}px`);
   }, [size]);
 
-  // Degradado del trazo: con el tema por defecto los dos colores son azul cielo (color liso).
+  // Degradado plateado del trazo (colores en globals.css → --scribble-silver*).
   // (useId puede incluir caracteres no válidos en url(#…): se limpian)
   const gradientId = `scribble-${useId().replace(/[^\w-]/g, "")}`;
 
@@ -62,9 +62,9 @@ export default function Scribble() {
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
           {/* var() solo funciona en style, no en atributos SVG */}
-          <stop offset="0" style={{ stopColor: "var(--scribble-from)" }} />
-          <stop offset="0.5" style={{ stopColor: "var(--scribble-to)" }} />
-          <stop offset="1" style={{ stopColor: "var(--scribble-from)" }} />
+          <stop offset="0" style={{ stopColor: "var(--scribble-silver)" }} />
+          <stop offset="0.5" style={{ stopColor: "var(--scribble-silver-dark)" }} />
+          <stop offset="1" style={{ stopColor: "var(--scribble-silver)" }} />
         </linearGradient>
       </defs>
       {size && size.width > 0 && (

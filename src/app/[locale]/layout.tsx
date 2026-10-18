@@ -20,7 +20,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
   const locale = await getLocale();
 
   return (
-    <html lang={locale} className={`${plexSans.variable} ${plexMono.variable} theme-silver`}>
+    <html lang={locale} className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>
         <NextIntlClientProvider>
           <SiteNav />

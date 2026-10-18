@@ -14,10 +14,10 @@ type Props = {
 export default function TitleBlock({ fields, className = "" }: Props) {
   return (
     <dl
-      className={`grid grid-cols-2 border-t border-l border-stroke sm:grid-cols-3 lg:grid-cols-6 ${className}`}
+      className={`grid grid-cols-2 border-t border-l border-ink sm:grid-cols-3 lg:grid-cols-6 ${className}`}
     >
       {fields.map((field) => (
-        <div key={field.label} className="border-r border-b border-stroke px-3 py-2">
+        <div key={field.label} className="border-r border-b border-ink px-3 py-2">
           <dt className="label-mono text-ink-muted">{field.label}</dt>
           <dd className="mt-1 font-mono text-sm">{field.value}</dd>
         </div>
