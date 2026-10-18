@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 
 // Pequeñas variaciones (siempre las mismas) para que el trazo parezca hecho a mano.
-const STEPS = [7, 9, 7.5, 8.5, 7, 8.5]; // avance entre pasadas, en px
+const STEPS = [5.5, 6.5, 5.8, 6.4, 5.6, 6.2]; // avance entre pasadas, en px (~6)
 const TOP_JITTER = [2, 0, 4, 1, 3, 0];
 const BOTTOM_JITTER = [2, 0, 4, 1, 3, 0];
 const PAD = 3; // medio grosor del trazo: que no se corte arriba y abajo

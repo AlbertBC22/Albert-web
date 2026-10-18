@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (⏸ revisión de componentes)
-- **Último paso completado**: bloque A: tokens, fuentes, GSAP y componentes de `components/blueprint/` en `/es/_plano`
+- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (bloque A revisado por Albert)
+- **Último paso completado**: bloque A: tokens, fuentes, GSAP y componentes de `components/blueprint/` en `/es/_plano`, con los botones de garabato ya ajustados
 - **Siguiente paso**: bloque B: cursor personalizado, pantalla de carga y layout global (cabecera + cajetín)
-- **Esperando a Albert**: revisar `/es/_plano` y dar el visto bueno al bloque A
+- **Esperando a Albert**: confirmar el inicio del bloque B
 
 ## Estado por fase
 
@@ -62,7 +62,7 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 | 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
-| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul (6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover | Los botones con marcas de esquina le parecían demasiado típicos; Albert pidió el trazo de izquierda a derecha y más fino |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
 
@@ -78,6 +78,11 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Separación del garabato a 6 px · cierre del bloque A
+- **Hecho**: separación entre pasadas del garabato reducida a ~6 px (`STEPS` en `Scribble.tsx`), a petición de Albert. Con esto da por bueno el aspecto de los botones y el bloque A.
+- **Archivos modificados**: `src/components/blueprint/Scribble.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los botones.
 
 ### 2026-10-18 — Fase 2 ⏸ — Remate del garabato en línea
 - **Hecho**: el garabato ya no es uniforme: en el último tramo (30 % del ancho, máx. 70 px) el zigzag pierde altura hasta acabar en una línea horizontal en el borde derecho, como el remate de un trazo.
