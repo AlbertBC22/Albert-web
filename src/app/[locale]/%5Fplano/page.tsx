@@ -6,7 +6,6 @@ import BlueprintFrame from "@/components/blueprint/BlueprintFrame";
 import { Button, ButtonLink } from "@/components/blueprint/Button";
 import CornerCoords from "@/components/blueprint/CornerCoords";
 import DimensionLine from "@/components/blueprint/DimensionLine";
-import GridBackground from "@/components/blueprint/GridBackground";
 import SectionLabel from "@/components/blueprint/SectionLabel";
 import SpecList from "@/components/blueprint/SpecList";
 import TitleBlock from "@/components/blueprint/TitleBlock";
@@ -42,7 +41,6 @@ const TYPE_SCALE = [
 export default function DesignSystemPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-24 px-4 py-16 sm:px-8">
-      <GridBackground />
 
       <header className="space-y-4">
         <SectionLabel index="00">Sistema de diseño</SectionLabel>

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
-import SiteNav from "@/components/layout/SiteNav";
+import CustomCursor from "@/components/blueprint/CustomCursor";
+import GridBackground from "@/components/blueprint/GridBackground";
+import Loader from "@/components/layout/Loader";
+import LoaderScript from "@/components/layout/LoaderScript";
+import SiteFooter from "@/components/layout/SiteFooter";
+import SiteHeader from "@/components/layout/SiteHeader";
 import { routing } from "@/i18n/routing";
 import { plexMono, plexSans } from "../fonts";
 import "../globals.css";
@@ -20,11 +25,19 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
   const locale = await getLocale();
 
   return (
-    <html lang={locale} className={`${plexSans.variable} ${plexMono.variable}`}>
+    // suppressHydrationWarning: LoaderScript y el cursor añaden clases a <html> antes de hidratar
+    <html lang={locale} className={`${plexSans.variable} ${plexMono.variable}`} suppressHydrationWarning>
+      <head>
+        <LoaderScript />
+      </head>
       <body>
         <NextIntlClientProvider>
-          <SiteNav />
+          <GridBackground />
+          <Loader />
+          <CustomCursor />
+          <SiteHeader />
           <main>{children}</main>
+          <SiteFooter />
         </NextIntlClientProvider>
       </body>
     </html>

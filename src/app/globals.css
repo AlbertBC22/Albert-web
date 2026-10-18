@@ -173,3 +173,190 @@
     }
   }
 }
+
+/* ==========================================================================
+   Cursor de replanteo (CustomCursor.tsx). Solo existe con ratón y sin reduced motion.
+   ========================================================================== */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none;
+}
+
+/* En campos de texto, cursor nativo (el personalizado se oculta) */
+.has-custom-cursor :is(input, textarea, [contenteditable="true"]) {
+  cursor: text;
+}
+
+@layer components {
+  .bp-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 110; /* por encima de la pantalla de carga */
+    pointer-events: none;
+    will-change: transform;
+    transition: opacity 0.2s ease;
+  }
+
+  .bp-cursor[data-mode="hidden"] {
+    opacity: 0;
+  }
+
+  /* Cruz: dos líneas de 21 px centradas en el punto */
+  .bp-cursor__cross::before,
+  .bp-cursor__cross::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+    /* Halo blanco: la cruz sigue viéndose sobre fotos o fondos oscuros */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.75);
+    transition:
+      transform 0.25s ease,
+      opacity 0.2s ease;
+  }
+
+  .bp-cursor__cross::before {
+    top: 0;
+    left: -10px;
+    width: 21px;
+    height: 1px;
+  }
+
+  .bp-cursor__cross::after {
+    top: -10px;
+    left: 0;
+    width: 1px;
+    height: 21px;
+  }
+
+  .bp-cursor:is([data-mode="link"], [data-mode="view"]) .bp-cursor__cross::before,
+  .bp-cursor:is([data-mode="link"], [data-mode="view"]) .bp-cursor__cross::after {
+    transform: scale(0.35);
+  }
+
+  /* Marco de corchetes: cuatro esquinas dibujadas con degradados */
+  .bp-cursor__frame {
+    --size: 34px;
+    --arm: 8px;
+    position: absolute;
+    top: calc(var(--size) / -2);
+    left: calc(var(--size) / -2);
+    width: var(--size);
+    height: var(--size);
+    opacity: 0;
+    transform: scale(0.4);
+    background:
+      linear-gradient(var(--ink), var(--ink)) top left / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top left / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top right / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) top right / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom left / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom left / 1px var(--arm) no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom right / var(--arm) 1px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) bottom right / 1px var(--arm) no-repeat;
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      width 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      height 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      top 0.3s cubic-bezier(0.3, 0.7, 0.4, 1),
+      left 0.3s cubic-bezier(0.3, 0.7, 0.4, 1);
+  }
+
+  .bp-cursor[data-mode="link"] .bp-cursor__frame {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Sobre fotos: marco más grande con "VER" */
+  .bp-cursor[data-mode="view"] .bp-cursor__frame {
+    --size: 76px;
+    --arm: 12px;
+    opacity: 1;
+    transform: scale(1);
+    background-color: rgba(255, 255, 255, 0.85);
+  }
+
+  .bp-cursor__view {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .bp-cursor[data-mode="view"] .bp-cursor__view {
+    opacity: 1;
+  }
+
+  .bp-cursor__coords {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    font-size: 10px;
+    white-space: nowrap;
+    color: var(--ink-muted);
+    text-shadow:
+      0 0 2px #fff,
+      0 0 2px #fff;
+    transition: transform 0.3s ease;
+  }
+
+  .bp-cursor[data-mode="view"] .bp-cursor__coords {
+    transform: translate(26px, 26px);
+  }
+}
+
+/* ==========================================================================
+   Pantalla de carga (Loader.tsx + LoaderScript.tsx)
+   ========================================================================== */
+html.loader-active {
+  overflow: hidden;
+}
+
+.loader-off .bp-loader {
+  display: none;
+}
+
+@layer components {
+  .bp-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow: hidden;
+    /* Seguridad: si algo falla en JS, desaparece sola a los 6 s */
+    animation: bp-loader-failsafe 0s linear 6s forwards;
+  }
+
+  /* Estados iniciales (los anima GSAP): así no se ve la composición final antes de hidratar */
+  .bp-loader [data-grid-v] {
+    transform: scaleY(0);
+  }
+
+  .bp-loader [data-grid-h] {
+    transform: scaleX(0);
+  }
+
+  .bp-loader [data-progress],
+  .bp-loader [data-seam] {
+    transform: scaleX(0);
+  }
+
+  .bp-loader [data-name] {
+    transform: translateY(110%);
+  }
+
+  .bp-loader :is([data-corner], [data-meta], [data-role], [data-step], [data-step-ok]) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@keyframes bp-loader-failsafe {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}

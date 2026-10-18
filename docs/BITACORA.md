@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (bloque A revisado por Albert)
-- **Último paso completado**: bloque A: tokens, fuentes, GSAP y componentes de `components/blueprint/` en `/es/_plano`, con los botones de garabato ya ajustados
-- **Siguiente paso**: bloque B: cursor personalizado, pantalla de carga y layout global (cabecera + cajetín)
-- **Esperando a Albert**: confirmar el inicio del bloque B
+- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (cerrada en local, pendiente de PR)
+- **Último paso completado**: bloque B: cursor de replanteo, pantalla de carga y layout global (cabecera + cajetín)
+- **Siguiente paso**: push → PR → preview en Vercel → merge; después, Fase 3 — Página principal
+- **Esperando a Albert**: autorizar el push y revisar la preview
 
 ## Estado por fase
 
@@ -18,7 +18,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 |---|---|---|---|---|
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
-| 2 | Sistema de diseño "plano técnico" | ◐ | `fase-02-diseno` | |
+| 2 | Sistema de diseño "plano técnico" | ◐ (cerrada en local) | `fase-02-diseno` | |
 | 3 | Página principal (scroll) | ☐ | | |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
@@ -79,6 +79,23 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 2 — Bloque B: cursor, pantalla de carga y layout global
+- **Hecho**:
+  - **Cursor de replanteo** (`CustomCursor`): cruz fina con halo blanco + lectura `X:0000 Y:0000`; marco de corchetes sobre enlaces y botones; marco con "VER" sobre `img` o `[data-cursor="view"]`; cursor nativo en campos de texto. Solo con `pointer: fine` y sin reduced motion (`useSyncExternalStore` sobre las media queries). Posición escrita directamente en el DOM, sin re-render por movimiento.
+  - **Pantalla de carga** (`Loader` + `LoaderScript`): retícula que se traza desde el centro, marco con esquinas (DrawSVG), nombre revelado con máscara, pasos numerados con OK, cota de progreso con el %, y salida con un corte horizontal y apertura en dos hojas (~2,3 s en total). Primera visita de la sesión (`sessionStorage`), se salta con clic, Esc o el botón "[ Saltar ]". Un script en `<head>` la oculta antes de pintar si ya se vio o con reduced motion; `<noscript>` la oculta sin JS; failsafe CSS a los 6 s. Bloquea el scroll mientras se ve.
+  - **Layout global**: retícula de fondo en todas las páginas; cabecera fija con firma, índice de planos `[00] Inicio…` (página activa marcada, menú desplegable en móvil) y selector `ES / EN`; pie con el cajetín (autor, proyecto, nº de plano por página `AB-00…AB-04`, `AB-99` en `_plano`, escala 1:1, revisión = fecha del build, idioma).
+  - Páginas provisionales con el mismo contenedor que la cabecera y el cajetín.
+- **Archivos creados**: `src/components/blueprint/CustomCursor.tsx`, `src/components/layout/{SiteHeader,HeaderNav,SiteFooter,SheetNumber,Loader,LoaderScript}.tsx`, `src/lib/loader.ts`.
+- **Archivos modificados**: `src/app/[locale]/layout.tsx`, `src/app/globals.css`, `src/components/layout/LocaleSwitcher.tsx`, `next.config.ts` (`NEXT_PUBLIC_BUILD_DATE`), `src/messages/{es,en}.json`, páginas provisionales, `%5Fplano/page.tsx` (la retícula pasa al layout), `docs/BITACORA.md`.
+- **Archivos eliminados**: `src/components/layout/SiteNav.tsx` (sustituido por `SiteHeader` + `HeaderNav`).
+- **Problemas / notas**:
+  - Una constante exportada desde un archivo `"use client"` llega al servidor como referencia de cliente, no como valor → la clave del loader vive en `src/lib/loader.ts`.
+  - GSAP lee un `transform` puesto por CSS como píxeles: con estado inicial en CSS hay que usar `fromTo` (y `y: 0` cuando se anima `yPercent`).
+  - La cruz negra desaparecía sobre fondos oscuros → halo blanco (`box-shadow` / `text-shadow`). Se descartó `mix-blend-mode` porque invertiría el marco de "VER".
+  - En las rutas `[slug]` la navegación de la cabecera y el nº de plano se resuelven al recibir la petición (dentro de `Suspense`), por `cacheComponents`.
+  - La duración real del loader (~2,3 s con la apertura) es algo mayor que los ~1,6 s previstos: 1,45 s de dibujo + ~0,9 s de apertura.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · pruebas con Playwright + Edge: secuencia del loader, no reaparece al recargar, cursor (normal / enlace / foto / fondo oscuro), nº de plano y enlace activo correctos (`/es/_plano` → AB-99, `/en/projects/albert-web` → AB-02), móvil sin cursor ni scroll horizontal con menú desplegable, reduced motion sin loader ni cursor, sin errores de consola.
 
 ### 2026-10-18 — Fase 2 ⏸ — Plateado descartado: garabato azul de nuevo
 - **Hecho**: Albert descarta también el garabato plateado. `globals.css` y `Scribble.tsx` se restauran tal cual estaban en `ea9f65e` (garabato azul cielo, opacidad 0,55). El código de `src/` queda idéntico al de antes de la prueba.

@@ -18,9 +18,9 @@ async function AlbumDetail({ params }: Pick<Props, "params">) {
   const t = await getTranslations();
 
   return (
-    <>
+    <div className="mx-auto max-w-6xl space-y-4 px-4 py-16 sm:px-8">
       <h1>{t("AlbumPage.title", { slug })}</h1>
       <p>{t("Placeholder.notice")}</p>
-    </>
+    </div>
   );
 }

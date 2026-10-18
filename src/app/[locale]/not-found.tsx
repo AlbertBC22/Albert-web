@@ -6,9 +6,9 @@ export default async function NotFoundPage() {
   const t = await getTranslations("NotFoundPage");
 
   return (
-    <>
+    <div className="mx-auto max-w-6xl space-y-4 px-4 py-16 sm:px-8">
       <h1>{t("title")}</h1>
       <Link href="/">{t("back")}</Link>
-    </>
+    </div>
   );
 }
