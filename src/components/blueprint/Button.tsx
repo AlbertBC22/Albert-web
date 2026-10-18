@@ -12,20 +12,29 @@ function buttonClass(variant: Variant, className = "") {
   return `bp-button ${variant === "accent" ? "bp-button--accent" : ""} ${className}`;
 }
 
-// Garabato en zigzag de arriba abajo. Con preserveAspectRatio="none" se adapta a cualquier
-// tamaño de botón. El grosor va en unidades del viewBox (los botones apenas se estiran en
-// vertical, así que el trazo horizontal mantiene su grosor). No usar vector-effect aquí:
-// rompe el cálculo de pathLength y el garabato se queda a medias.
-const SCRIBBLE =
-  "M4 6C30 3 70 4 96 5Q99 5.5 96 8C70 11 30 10 5 13Q1 14 5 16C30 18 70 17 95 19Q99 20 95 22C70 25 30 24 5 26Q1 27 5 29C30 31 70 30 96 33";
+// Garabato en zigzag vertical que avanza de izquierda a derecha, como un solo trazo de
+// rotulador. Con preserveAspectRatio="none" se adapta a cualquier tamaño de botón y
+// vector-effect="non-scaling-stroke" mantiene el grosor en px. Los extremos varían un poco
+// para que parezca hecho a mano.
+const SCRIBBLE = (() => {
+  const tops = [4, 1, 6, 2, 5, 3];
+  const bottoms = [36, 39, 34, 38, 35, 37];
+  const steps = [1.6, 2.4, 1.9, 2.2, 1.7, 2.1]; // avance irregular entre pasadas
+  let d = "M1 4";
+  for (let i = 1, x = 2.5; x <= 99; i++, x += steps[i % 6]) {
+    const y = i % 2 ? bottoms[i % 6] : tops[i % 6];
+    d += ` L${x.toFixed(1)} ${y}`;
+  }
+  return d;
+})();
 
 // Contenido común: garabato (hover), cuatro líneas de construcción que se pasan
 // de las esquinas y, opcionalmente, la flecha. Estilos en globals.css → .bp-button.
 function ButtonContent({ children, arrow }: { children: ReactNode; arrow?: boolean }) {
   return (
     <>
-      <svg aria-hidden viewBox="0 0 100 38" preserveAspectRatio="none" className="bp-button__scribble">
-        <path d={SCRIBBLE} pathLength={1} />
+      <svg aria-hidden viewBox="0 0 100 40" preserveAspectRatio="none" className="bp-button__scribble">
+        <path d={SCRIBBLE} vectorEffect="non-scaling-stroke" />
       </svg>
       <svg aria-hidden className="bp-button__lines">
         <line x1="0" y1="8" x2="100%" y2="8" />

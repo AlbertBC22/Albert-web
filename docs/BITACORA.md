@@ -62,7 +62,7 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 | 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
-| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul que rellena de arriba abajo al hover | Los botones con marcas de esquina le parecían demasiado típicos |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul (6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover | Los botones con marcas de esquina le parecían demasiado típicos; Albert pidió el trazo de izquierda a derecha y más fino |
 
 ## Registro
 
@@ -78,6 +78,12 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Garabato de izquierda a derecha y más fino
+- **Hecho**: el garabato pasa a ser un zigzag vertical (~48 pasadas con avance y extremos irregulares) que avanza de izquierda a derecha; grosor 6 px constante gracias a `vector-effect="non-scaling-stroke"`.
+- **Problemas / notas**: con `non-scaling-stroke` no se puede usar `pathLength`; el guion se fija en px (`stroke-dasharray: 1900px 2000px`). Funciona porque la longitud del zigzag (~1.700–1.850 px) apenas depende del ancho del botón: la marcan las pasadas verticales. Si se cambia la altura del botón o el nº de pasadas, revisar ese valor.
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
 
 ### 2026-10-18 — Fase 2 ⏸ — Botones con garabato de rotulador
 - **Hecho**:
