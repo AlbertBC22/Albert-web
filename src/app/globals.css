@@ -14,9 +14,6 @@
   --sky-soft: #e0f2fe; /* fondos de resalte */
   --sky-ink: #0369a1; /* azul para texto (AA sobre blanco) */
   --gradient-accent: linear-gradient(90deg, #e0f2fe 0%, rgba(224, 242, 254, 0) 100%);
-  /* Garabato plateado de los botones: degradado plata → grafito claro → plata (Scribble.tsx) */
-  --scribble-silver: #c3c8ce;
-  --scribble-silver-dark: #79808a;
 }
 
 /* Tokens expuestos a Tailwind: bg-paper, text-ink, border-line, font-mono, text-h1... */
@@ -128,8 +125,8 @@
     overflow: hidden;
     pointer-events: none;
     fill: none;
-    /* El color lo pone el degradado plateado de Scribble.tsx */
-    stroke-opacity: 0.8;
+    stroke: var(--sky);
+    stroke-opacity: 0.55;
     stroke-width: 6;
     stroke-linecap: round;
     stroke-linejoin: round;

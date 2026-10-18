@@ -62,8 +62,8 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 | 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
-| 2026-10-18 | Prueba de "toque plateado" en todo: Albert solo conserva el **garabato plateado** de los botones; el resto sigue en tinta y azul | Lo demás no le convenció |
-| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador (plateado; trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
+| 2026-10-18 | **Descartado** el "toque plateado" (incluido el garabato plateado): se mantienen tinta y azul cielo | Probado y no le convenció |
+| 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
 
@@ -79,6 +79,11 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Plateado descartado: garabato azul de nuevo
+- **Hecho**: Albert descarta también el garabato plateado. `globals.css` y `Scribble.tsx` se restauran tal cual estaban en `ea9f65e` (garabato azul cielo, opacidad 0,55). El código de `src/` queda idéntico al de antes de la prueba.
+- **Archivos modificados**: `src/app/globals.css`, `src/components/blueprint/Scribble.tsx`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · captura de los botones.
 
 ### 2026-10-18 — Fase 2 ⏸ — Del plateado, solo el garabato
 - **Hecho**: Albert se queda solo con el garabato plateado. Se eliminan la clase `theme-silver`, los títulos metálicos, las líneas plateadas, el brillo plateado de los resaltes y los tokens `--stroke` / `--stroke-muted` (sin tema que alternar ya no aportan nada). Los componentes vuelven a `text-ink`, `text-ink-muted` y `border-ink`.
