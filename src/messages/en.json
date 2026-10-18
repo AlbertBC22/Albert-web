@@ -1,0 +1,47 @@
+{
+  "Metadata": {
+    "title": "Albert Batiste Castellet — Software Developer",
+    "description": "Resume, projects and photography by Albert Batiste Castellet, Software Developer in Barcelona."
+  },
+  "Nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "education": "Education",
+    "projects": "Projects",
+    "photography": "Photography",
+    "contact": "Contact"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "Placeholder": {
+    "notice": "Page under construction."
+  },
+  "HomePage": {
+    "title": "Albert Batiste Castellet"
+  },
+  "EducationPage": {
+    "title": "Education"
+  },
+  "ProjectsPage": {
+    "title": "Projects"
+  },
+  "ProjectPage": {
+    "title": "Project: {slug}"
+  },
+  "PhotographyPage": {
+    "title": "Photography"
+  },
+  "AlbumPage": {
+    "title": "Album: {slug}"
+  },
+  "ContactPage": {
+    "title": "Contact"
+  },
+  "NotFoundPage": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}
