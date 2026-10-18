@@ -79,6 +79,14 @@ Plantilla de entrada (copiar arriba del todo):
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
 
+### 2026-10-18 — Fase 2 ⏸ — Remate del garabato en línea
+- **Hecho**: el garabato ya no es uniforme: en el último tramo (30 % del ancho, máx. 70 px) el zigzag pierde altura hasta acabar en una línea horizontal en el borde derecho, como el remate de un trazo.
+- **Archivos creados**: `src/components/blueprint/Scribble.tsx` (componente de cliente).
+- **Archivos modificados**: `Button.tsx`, `globals.css`, `docs/BITACORA.md`.
+- **Decisiones**: para rematar justo en el borde hay que conocer el ancho del botón → `Scribble` lo mide con `ResizeObserver`, genera el trazo en px reales y pasa su longitud exacta (`getTotalLength`) en `--scribble-length` al `<svg>`. Desaparecen el valor fijo de `stroke-dasharray` y el truco del `slice`. Animación: 0,7 s.
+- **Problemas / notas**: la variable CSS debe ir en el `<svg>` (donde se resuelve `stroke-dasharray`), no en el `<path>`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas de los tres botones.
+
 ### 2026-10-18 — Fase 2 ⏸ — Garabato con pasadas más separadas
 - **Hecho**: a petición de Albert, más separación entre las pasadas del garabato (~8 px, igual en todos los botones).
 - **Problemas / notas**:

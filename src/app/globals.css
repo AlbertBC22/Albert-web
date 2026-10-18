@@ -113,10 +113,9 @@
     stroke-width: 1;
   }
 
-  /* Rotulador: zigzag vertical a escala real (ver Button.tsx) que se "pinta" de izquierda
-     a derecha con stroke-dashoffset. El zigzag completo mide ~1.900 px; cada botón solo
-     muestra su tramo, así que el rotulador avanza a la misma velocidad en todos.
-     Al salir no se "despinta" (empezaría por el tramo invisible): se desvanece y se reinicia. */
+  /* Rotulador: zigzag a medida del botón (Scribble.tsx) que se "pinta" de izquierda a
+     derecha con stroke-dashoffset; su longitud exacta llega en --scribble-length.
+     Al salir se desvanece y se reinicia. */
   .bp-button__scribble {
     position: absolute;
     inset: 2px 0;
@@ -131,9 +130,9 @@
     stroke-width: 6;
     stroke-linecap: round;
     stroke-linejoin: round;
-    /* Hueco algo mayor que el guion: evita un punto suelto (remate redondo) en reposo */
-    stroke-dasharray: 2100 2200;
-    stroke-dashoffset: 2100;
+    /* Hueco mayor que el guion: evita un punto suelto (remate redondo) en reposo */
+    stroke-dasharray: var(--scribble-length, 2000px) 9999px;
+    stroke-dashoffset: var(--scribble-length, 2000px);
     opacity: 0;
     transition:
       opacity 0.25s ease,
@@ -146,7 +145,7 @@
     opacity: 1;
     transition:
       opacity 0s,
-      stroke-dashoffset 1.1s cubic-bezier(0.3, 0.1, 0.45, 1);
+      stroke-dashoffset 0.7s cubic-bezier(0.35, 0.1, 0.4, 1);
   }
 
   .bp-button__arrow {
