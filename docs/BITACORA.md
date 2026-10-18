@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (bloque A: tokens, GSAP y componentes estáticos)
-- **Último paso completado**: Fase 1 cerrada; producción en https://albert-web-iota.vercel.app
-- **Siguiente paso**: ⏸ revisión de componentes en `/es/_plano`
-- **Esperando a Albert**: —
+- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (⏸ revisión de componentes)
+- **Último paso completado**: bloque A: tokens, fuentes, GSAP y componentes de `components/blueprint/` en `/es/_plano`
+- **Siguiente paso**: bloque B: cursor personalizado, pantalla de carga y layout global (cabecera + cajetín)
+- **Esperando a Albert**: revisar `/es/_plano` y dar el visto bueno al bloque A
 
 ## Estado por fase
 
@@ -53,6 +53,14 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | `engines.node >= 24` en `package.json` | Misma versión de Node en local y en Vercel |
 | 2026-10-18 | Sin Prettier por ahora | Simplicidad |
 | 2026-10-18 | Se usa la clave `sb_publishable_…` (no la anon legacy) | Recomendación de Supabase para apps nuevas |
+| 2026-10-18 | Tokens de color de `CLAUDE.md` sin cambios, + `--grid-minor` para las líneas finas de la retícula | Confirmado por Albert; revisión visual más adelante si hace falta |
+| 2026-10-18 | IBM Plex Sans (300–600) + Plex Mono (400–500) con `next/font`; escala fluida display/h1/h2/h3/lead/label | Confirmado por Albert |
+| 2026-10-18 | Espaciado en múltiplos de 8 px; retícula de fondo cada 16 px (finas) y 80 px (principales) | Una retícula de 8 px resulta demasiado densa en pantalla |
+| 2026-10-18 | Sin scroll suave | Accesibilidad y simplicidad |
+| 2026-10-18 | Página interna en `/es/_plano` (carpeta `%5Fplano`), `noindex` | Las carpetas con `_` son privadas en Next.js |
+| 2026-10-18 | Cursor: coordenadas del viewport en px con 4 cifras (`X:0412 Y:0218`) | Como las referencias |
+| 2026-10-18 | Pantalla de carga: primera visita de la sesión, saltable, ≤ ~1,6 s, no se muestra con reduced motion; que sea "bonita e interesante" | Petición de Albert |
+| 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 
 ## Registro
 
@@ -68,6 +76,25 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-18 — Fase 2 ⏸ — Tokens, GSAP y componentes estáticos
+- **Hecho**:
+  - Tokens en `globals.css` (`:root` + `@theme inline` de Tailwind 4): colores, fuentes y escala tipográfica (`text-display`, `text-h1`… `text-label`), utilidad `label-mono`, foco visible, selección y estilos del botón de plano (`.bp-button`).
+  - IBM Plex Sans y Plex Mono con `next/font` (`src/app/fonts.ts`).
+  - GSAP 3.15 + `@gsap/react`: registro único de ScrollTrigger, DrawSVG y SplitText en `src/lib/animations/gsap.ts`; `MOTION_OK` y `prefersReducedMotion()` en `motion.ts`.
+  - Componentes en `src/components/blueprint/`: `GridBackground`, `BlueprintFrame` (esquinas con DrawSVG), `DimensionLine` (cota horizontal/vertical que se extiende desde el valor), `SectionLabel`, `Annotation`, `SpecList`, `CornerCoords`, `TitleBlock`, `AccentHighlight`, `Button` / `ButtonLink`.
+  - Página interna `/es/_plano` con todos los componentes, colores y escala tipográfica.
+- **Archivos creados**: `src/app/fonts.ts`, `src/lib/animations/{gsap,motion}.ts`, `src/components/blueprint/*` (11 componentes en 10 archivos), `src/app/[locale]/%5Fplano/page.tsx`.
+- **Archivos modificados**: `src/app/globals.css`, `src/app/[locale]/layout.tsx` (fuentes), `package.json` / `package-lock.json` (gsap, @gsap/react), `docs/BITACORA.md`.
+- **Decisiones**: ver tabla.
+- **Problemas / notas**:
+  - En Tailwind 4 dos clases `rotate-*` en el mismo elemento no se suman (gana una): cada flecha de cota lleva una única rotación.
+  - Las animaciones solo se crean con `prefers-reduced-motion: no-preference` (`gsap.matchMedia`); sin JS o con movimiento reducido todo se ve dibujado.
+  - Revisión visual con capturas (Playwright + Edge, fuera del repo) en escritorio (1440) y móvil (390). El modo `--screenshot` de Edge headless no ejecuta bien las animaciones; no sirve para revisarlas.
+  - Al parar `next start` en segundo plano en Windows, el proceso `node` puede quedar vivo ocupando el puerto. Hay que cerrarlo por PID.
+  - Hay un paquete `node` instalado en `C:\Users\AlbertBatiste\node_modules` (junto al `package-lock.json` suelto de la carpeta de usuario). No afecta al proyecto.
+- **Pendiente**: bloque B (cursor, pantalla de carga, layout global).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑
 
 ### 2026-10-18 — Fase 1 — Cierre: preview y producción
 - **Hecho**: variables de Supabase añadidas en Vercel (tipo *Config*, Production y Preview). PR #2 con preview correcta, merge a `main` y primer despliegue en producción.

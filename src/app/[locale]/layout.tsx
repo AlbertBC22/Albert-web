@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import SiteNav from "@/components/layout/SiteNav";
 import { routing } from "@/i18n/routing";
+import { plexMono, plexSans } from "../fonts";
 import "../globals.css";
 
 // Pre-renderiza la web en todos los idiomas.
@@ -19,7 +20,7 @@ export default async function LocaleLayout({ children }: LayoutProps<"/[locale]"
   const locale = await getLocale();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={`${plexSans.variable} ${plexMono.variable}`}>
       <body>
         <NextIntlClientProvider>
           <SiteNav />
