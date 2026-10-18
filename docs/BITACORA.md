@@ -79,6 +79,15 @@ Plantilla de entrada (copiar arriba del todo):
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
 
+### 2026-10-18 — Fase 2 ⏸ — PRUEBA: tema plateado
+- **Hecho**: a petición de Albert, prueba de "un toque de plateado a todo", reversible:
+  - Clase `theme-silver` en `<html>` (layout) que sobrescribe tokens: líneas de dibujo en gris plata (`--stroke`, `--stroke-muted`), resaltes y CTA con brillo plateado (`--gradient-accent`), garabato del botón en degradado plateado (`--scribble-from/to`, `--scribble-opacity`) y títulos grandes (`text-display`, `text-h1`, `text-h2`) con texto metálico grafito → plata.
+  - Se mantienen en azul la retícula, las etiquetas `REF.`, las anotaciones y el foco.
+  - Refactor de apoyo: los componentes usan `text-stroke`, `text-stroke-muted` y `border-stroke` en lugar de `ink` para sus líneas; el garabato toma el color de un degradado SVG con variables CSS (sin cambios visibles con el tema por defecto).
+- **Archivos modificados**: `globals.css`, `[locale]/layout.tsx`, `Scribble.tsx`, `BlueprintFrame.tsx`, `DimensionLine.tsx`, `TitleBlock.tsx`, `docs/BITACORA.md`.
+- **Decisiones**: pendiente de Albert. Si no le convence, se revierte este commit.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · capturas comparativas con y sin plateado.
+
 ### 2026-10-18 — Fase 2 ⏸ — Separación del garabato a 6 px · cierre del bloque A
 - **Hecho**: separación entre pasadas del garabato reducida a ~6 px (`STEPS` en `Scribble.tsx`), a petición de Albert. Con esto da por bueno el aspecto de los botones y el bloque A.
 - **Archivos modificados**: `src/components/blueprint/Scribble.tsx`, `docs/BITACORA.md`.

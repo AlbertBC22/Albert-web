@@ -44,7 +44,7 @@ export default function DimensionLine({ value, orientation = "horizontal", class
     <div
       ref={ref}
       aria-hidden
-      className={`flex items-center text-ink-muted ${isHorizontal ? "w-full" : "h-full flex-col"} ${className}`}
+      className={`flex items-center text-stroke-muted ${isHorizontal ? "w-full" : "h-full flex-col"} ${className}`}
     >
       <span data-end className={`${tick} shrink-0 bg-current`} />
       <Arrow data-end className={startArrow} />

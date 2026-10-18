@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 
 // Pequeñas variaciones (siempre las mismas) para que el trazo parezca hecho a mano.
 const STEPS = [5.5, 6.5, 5.8, 6.4, 5.6, 6.2]; // avance entre pasadas, en px (~6)
@@ -53,9 +53,23 @@ export default function Scribble() {
     svgRef.current?.style.setProperty("--scribble-length", `${Math.ceil(path.getTotalLength()) + 1}px`);
   }, [size]);
 
+  // Degradado del trazo: con el tema por defecto los dos colores son azul cielo (color liso).
+  // (useId puede incluir caracteres no válidos en url(#…): se limpian)
+  const gradientId = `scribble-${useId().replace(/[^\w-]/g, "")}`;
+
   return (
     <svg ref={svgRef} aria-hidden className="bp-button__scribble">
-      {size && size.width > 0 && <path ref={pathRef} d={buildPath(size.width, size.height)} />}
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+          {/* var() solo funciona en style, no en atributos SVG */}
+          <stop offset="0" style={{ stopColor: "var(--scribble-from)" }} />
+          <stop offset="0.5" style={{ stopColor: "var(--scribble-to)" }} />
+          <stop offset="1" style={{ stopColor: "var(--scribble-from)" }} />
+        </linearGradient>
+      </defs>
+      {size && size.width > 0 && (
+        <path ref={pathRef} d={buildPath(size.width, size.height)} stroke={`url(#${gradientId})`} />
+      )}
     </svg>
   );
 }
