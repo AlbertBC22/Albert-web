@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* Provisional: los tokens del sistema de diseño "plano técnico" se definen en la Fase 2. Solo modo claro. */
+:root {
+  --paper: #ffffff;
+  --ink: #0a0a0a;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
