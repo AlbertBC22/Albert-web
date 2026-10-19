@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 2 — Sistema de diseño "plano técnico" (cerrada en local, pendiente de PR)
-- **Último paso completado**: bloque B: cursor de replanteo, pantalla de carga y layout global (cabecera + cajetín)
-- **Siguiente paso**: push → PR → preview en Vercel → merge; después, Fase 3 — Página principal
-- **Esperando a Albert**: autorizar el push y revisar la preview
+- **Fase actual**: Fase 3 — Página principal (scroll)
+- **Último paso completado**: Fase 2 cerrada y en producción (squash merge, PR #3)
+- **Siguiente paso**: contenido tipado del CV + Hero, Perfil y Experiencia → ⏸
+- **Esperando a Albert**: —
 
 ## Estado por fase
 
@@ -18,8 +18,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 |---|---|---|---|---|
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
-| 2 | Sistema de diseño "plano técnico" | ◐ (cerrada en local) | `fase-02-diseno` | |
-| 3 | Página principal (scroll) | ☐ | | |
+| 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
+| 3 | Página principal (scroll) | ◐ | `fase-03-principal` | |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
@@ -63,6 +63,12 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-18 | Cajetín: fecha de revisión = fecha del build; nº de plano por página (`AB-00` inicio, `AB-01` formación…) | Se actualiza sola |
 | 2026-10-18 | **Descartado** el trazo a lápiz (filtro SVG de temblor y grano) en las líneas | A Albert le parece "mal hecho"; las líneas se quedan nítidas |
 | 2026-10-18 | **Descartado** el "toque plateado" (incluido el garabato plateado): se mantienen tinta y azul cielo | Probado y no le convenció |
+| 2026-10-19 | Merge de la Fase 2 con **squash** (un solo commit en `main`) | Historia limpia: la rama tenía pruebas descartadas y sus reversiones |
+| 2026-10-19 | Fechas del CV como datos (`AAAA-MM`, `null` = actualidad) formateadas por idioma | Sin duplicar ni desincronizar fechas entre ES y EN |
+| 2026-10-19 | Interruptor `NITS_PUBLISHED` en el contenido para el cambio de 2027 | El cambio "publicada" → "fue publicada" (y quitar enlaces) queda en una línea |
+| 2026-10-19 | Foto del hero: marco de plano 4:5 con "Foto — pendiente" hasta que Albert la aporte | Sin saltos de layout cuando llegue la real |
+| 2026-10-19 | La animación del hero espera a que se abra la pantalla de carga | Que no se pierda detrás del loader |
+| 2026-10-19 | Experiencia en el orden de `CONTENIDO.md`; Suited y BeonDev son simultáneas (media jornada cada una) | Confirmado por Albert |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
@@ -79,6 +85,10 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 2 — Cierre: squash merge y producción
+- **Hecho**: PR #3 con preview correcta; squash merge a `main` (`4313358`), rama borrada. Producción verificada con las mismas pruebas de navegador que en local (loader, cursor, cabecera, cajetín, móvil y reduced motion).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · producción ☑
 
 ### 2026-10-19 — Fase 2 — Bloque B: cursor, pantalla de carga y layout global
 - **Hecho**:
