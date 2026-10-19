@@ -157,4 +157,35 @@ export const cvEn: Cv = {
       text: "Federated referee from 2022 to 2024: decisions under pressure, impartiality and communication.",
     },
   ],
+  education: [
+    { id: "daw", title: "Web Application Developer", center: "Monlau FP", start: 2023, end: 2024 },
+    {
+      id: "dam",
+      title: "Higher Vocational Diploma in Multiplatform Application Development (DAM)",
+      center: "Monlau FP",
+      start: 2020,
+      end: 2023,
+    },
+    {
+      id: "smr",
+      title: "Vocational Diploma in Microcomputer Systems and Networks",
+      center: "Salesians Sarrià",
+      start: 2019,
+      end: 2021,
+    },
+  ],
+
+  certifications: [
+    { title: "MTA: Software Development Fundamentals", issuer: "Microsoft", year: "2022" },
+    { title: "MTA: Introduction to Programming using HTML and CSS", issuer: "Microsoft", year: "2022" },
+    { title: "PL/SQL Programming 11g", issuer: "Oracle", year: "2020–2023" },
+    { title: "SQL Fundamentals 11g", issuer: "Oracle", year: "2020–2023" },
+    { title: "Java SE Fundamentals", year: "2020–2023" },
+    { title: "Windows 10 Administration", year: "2020–2023" },
+    { title: "Linux Operating System Administration", issuer: "LPI", year: "2020–2023" },
+  ],
+  certificationsNote: "Earned during the DAM Higher Vocational Diploma at Monlau FP (2020–2023).",
+
+  // Only shown with SHOW_PLANNED_EDUCATION (flags.ts). Review when enabling it.
+  plannedEducation: [{ title: "Management / Product Owner training", year: "2027" }],
 };

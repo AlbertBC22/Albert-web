@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Página en construcción."
   },
-  "EducationPage": {
-    "title": "Formación"
-  },
   "ProjectsPage": {
     "title": "Proyectos"
   },
@@ -117,5 +114,27 @@
   },
   "Common": {
     "newTab": "(se abre en una pestaña nueva)"
+  },
+  "Education": {
+    "label": "Plano de formación",
+    "title": "Formación",
+    "intro": "Formación académica y certificaciones: la base técnica sobre la que trabajo.",
+    "academic": {
+      "label": "Formación académica",
+      "title": "Formación académica",
+      "center": "Centro"
+    },
+    "certifications": {
+      "label": "Certificaciones",
+      "title": "Certificaciones",
+      "certification": "Certificación",
+      "issuer": "Emisor",
+      "year": "Año",
+      "unknown": "Sin dato"
+    },
+    "planned": {
+      "label": "Formación prevista",
+      "title": "Formación prevista"
+    }
   }
 }

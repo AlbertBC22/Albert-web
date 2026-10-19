@@ -162,4 +162,29 @@ export const cvEs: Cv = {
       text: "Árbitro federado entre 2022 y 2024: decisiones bajo presión, imparcialidad y comunicación.",
     },
   ],
+  education: [
+    { id: "daw", title: "Desarrollador de aplicaciones web", center: "Monlau FP", start: 2023, end: 2024 },
+    {
+      id: "dam",
+      title: "Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)",
+      center: "Monlau FP",
+      start: 2020,
+      end: 2023,
+    },
+    { id: "smr", title: "Sistemas microinformáticos y redes", center: "Salesians Sarrià", start: 2019, end: 2021 },
+  ],
+
+  certifications: [
+    { title: "MTA: Software Development Fundamentals", issuer: "Microsoft", year: "2022" },
+    { title: "MTA: Introduction to Programming using HTML and CSS", issuer: "Microsoft", year: "2022" },
+    { title: "Programación PL/SQL 11g", issuer: "Oracle", year: "2020–2023" },
+    { title: "Conceptos fundamentales SQL 11g", issuer: "Oracle", year: "2020–2023" },
+    { title: "Java SE Fundamentals", year: "2020–2023" },
+    { title: "Administración de Windows 10", year: "2020–2023" },
+    { title: "Administración de sistemas operativos Linux", issuer: "LPI", year: "2020–2023" },
+  ],
+  certificationsNote: "Obtenidas durante el Grado Superior DAM en Monlau FP (2020–2023).",
+
+  // Solo se muestra con SHOW_PLANNED_EDUCATION (flags.ts). Revisar al activarla.
+  plannedEducation: [{ title: "Formación en gestión / Product Owner", year: "2027" }],
 };

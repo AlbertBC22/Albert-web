@@ -45,6 +45,25 @@ export type Interest = {
   text: string;
 };
 
+export type Education = {
+  id: string;
+  title: string;
+  center: string;
+  start: number; // año
+  end: number;
+};
+
+export type Certification = {
+  title: string;
+  issuer?: string; // sin emisor conocido → "—"
+  year: string; // "2022" o un periodo, "2020–2023"
+};
+
+export type PlannedEducation = {
+  title: string;
+  year: string;
+};
+
 export type Cv = {
   name: { first: string; last: string };
   role: string;
@@ -58,4 +77,9 @@ export type Cv = {
   stack: StackGroup[];
   languages: Language[];
   interests: Interest[];
+  // Página /formacion
+  education: Education[];
+  certifications: Certification[];
+  certificationsNote: string;
+  plannedEducation: PlannedEducation[];
 };

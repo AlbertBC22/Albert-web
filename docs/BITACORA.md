@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 4 — Formación
-- **Último paso completado**: Fase 3 cerrada y en producción (squash merge, PR #4)
-- **Siguiente paso**: contenido de formación y certificaciones + página `/formacion`
-- **Esperando a Albert**: —
+- **Fase actual**: Fase 4 — Formación (cerrada en local, pendiente de PR)
+- **Último paso completado**: página `/formacion` · `/en/education` con formación académica y certificaciones
+- **Siguiente paso**: push → PR → preview → squash merge; después, Fase 5 — Supabase
+- **Esperando a Albert**: autorizar el push y revisar la preview
 
 ## Estado por fase
 
@@ -20,7 +20,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
-| 4 | Formación | ◐ | `fase-04-formacion` | |
+| 4 | Formación | ◐ (cerrada en local) | `fase-04-formacion` | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
 | 7 | Galería de fotografía | ☐ | | |
@@ -88,6 +88,16 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 4 — Página de formación
+- **Hecho**:
+  - Contenido: `education`, `certifications`, `certificationsNote` y `plannedEducation` en `cv.es.ts` / `cv.en.ts` (tipos en `src/types/cv.ts`); interruptor `SHOW_PLANNED_EDUCATION = false` en `flags.ts`.
+  - Página `/es/formacion` · `/en/education` (plano AB-01): cabecera reutilizable `PageHeader` (REF. 00, cota con el nº de plano, título e intro); **REF. 01 Formación académica** con la misma línea de tiempo y láminas que la experiencia; **REF. 02 Certificaciones** como tabla de leyenda (nº, certificación, línea guía, emisor, año) con la animación `legend`; **REF. 03 Formación prevista** (lámina discontinua) solo con el interruptor activo.
+  - En móvil (< 640 px) la tabla oculta las columnas de emisor y año y los muestra bajo cada título.
+- **Archivos creados**: `src/components/sections/{PageHeader,AcademicEducation,Certifications,PlannedEducation}.tsx`.
+- **Archivos modificados**: `src/app/[locale]/formacion/page.tsx`, `src/types/cv.ts`, `src/content/{cv.es,cv.en,flags}.ts`, `src/messages/{es,en}.json` (se elimina `EducationPage`, se añade `Education`), `docs/BITACORA.md`.
+- **Decisiones**: ver tabla (interruptor de formación prevista; certificaciones con periodo 2020–2023 y emisor "—" donde no se conoce).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright en 1440 y 360 px: 3/3 nodos, 7 filas, nº de plano AB-01, CLS 0, sin scroll horizontal, formación prevista oculta (y visible al activar el interruptor de forma temporal); sin regresiones en principal y layout.
 
 ### 2026-10-19 — Fase 3 — Cierre: squash merge y producción
 - **Hecho**: Albert revisa la preview; hay detalles que no le terminan de convencer, pero se revisarán al final (anotado en el backlog). Squash merge del PR #4 (`f77ca41`), rama borrada. Producción verificada: cota 543 PX, 6/6 nodos, CLS 0 en 1440 / 390 / 360 px, contadores correctos en ES y EN.
