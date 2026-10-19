@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Page under construction."
   },
-  "EducationPage": {
-    "title": "Education"
-  },
   "ProjectsPage": {
     "title": "Projects"
   },
@@ -117,5 +114,27 @@
   },
   "Common": {
     "newTab": "(opens in a new tab)"
+  },
+  "Education": {
+    "label": "Education plan",
+    "title": "Education",
+    "intro": "Academic background and certifications: the technical foundation I work on.",
+    "academic": {
+      "label": "Academic background",
+      "title": "Academic background",
+      "center": "School"
+    },
+    "certifications": {
+      "label": "Certifications",
+      "title": "Certifications",
+      "certification": "Certification",
+      "issuer": "Issuer",
+      "year": "Year",
+      "unknown": "Not available"
+    },
+    "planned": {
+      "label": "Planned training",
+      "title": "Planned training"
+    }
   }
 }

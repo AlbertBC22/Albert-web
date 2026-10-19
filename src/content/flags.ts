@@ -7,6 +7,10 @@ import type { ExternalLink } from "@/types/cv";
 // "fue publicada" / "was published" en los dos idiomas y desaparecen los enlaces.
 export const NITS_PUBLISHED = true;
 
+// Sección "Formación prevista" de /formacion. Ponerla a true solo cuando la formación
+// (gestión / Product Owner, ~2027) esté en curso; antes, revisar el texto en cv.es.ts y cv.en.ts.
+export const SHOW_PLANNED_EDUCATION = false;
+
 // Enlaces de NITS en las tiendas (solo mientras esté publicada).
 export const NITS_LINKS: ExternalLink[] = NITS_PUBLISHED
   ? [
