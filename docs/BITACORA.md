@@ -297,4 +297,6 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 - (Fase 10) 404: conseguir que el contenido venga en el HTML del servidor (ahora se pinta en el cliente por `cacheComponents`).
 - (Fase 5/7/8) Las lecturas públicas de Supabase no deben usar `cookies()` (convertiría las páginas en dinámicas): usar un cliente anónimo sin cookies y `use cache`.
 - **Revisión visual de la página principal** cuando esté todo hecho: a Albert hay cosas que no le terminan de convencer (detalles por concretar).
+- **Revisar los textos** de la página principal y de la de formación (contenido de `cv.es.ts` / `cv.en.ts` y mensajes de interfaz).
+- **"Desimplificar" la web**: Albert quiere componentes algo más complejos / elaborados. Él buscará referencias; se concretará cuando las traiga.
 - Emisor de las certificaciones "Java SE Fundamentals" y "Administración de Windows 10" (ahora "—"), si Albert lo recupera.
