@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 3 — Página principal (cerrada en local, PR #4 pendiente de revisión)
-- **Último paso completado**: página principal completa (Hero → CTA) en ES y EN
-- **Siguiente paso**: revisar la preview → merge; después, Fase 4 — Formación
-- **Esperando a Albert**: revisar la preview del PR #4 y autorizar el merge
+- **Fase actual**: Fase 4 — Formación
+- **Último paso completado**: Fase 3 cerrada y en producción (squash merge, PR #4)
+- **Siguiente paso**: contenido de formación y certificaciones + página `/formacion`
+- **Esperando a Albert**: —
 
 ## Estado por fase
 
@@ -19,8 +19,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
-| 3 | Página principal (scroll) | ◐ (cerrada en local) | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) |
-| 4 | Formación | ☐ | | |
+| 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
+| 4 | Formación | ◐ | `fase-04-formacion` | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
 | 7 | Galería de fotografía | ☐ | | |
@@ -69,6 +69,9 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-19 | Foto del hero: marco de plano 4:5 con "Foto — pendiente" hasta que Albert la aporte | Sin saltos de layout cuando llegue la real |
 | 2026-10-19 | La animación del hero espera a que se abra la pantalla de carga | Que no se pierda detrás del loader |
 | 2026-10-19 | Experiencia en el orden de `CONTENIDO.md`; Suited y BeonDev son simultáneas (media jornada cada una) | Confirmado por Albert |
+| 2026-10-19 | Merge de la Fase 3 con squash; la revisión visual de la principal se hace al final del proyecto | Albert prefiere avanzar y pulir después |
+| 2026-10-19 | Formación prevista detrás del interruptor `SHOW_PLANNED_EDUCATION` (false por defecto) | Solo se muestra cuando esté en curso |
+| 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
 ## Registro
@@ -85,6 +88,11 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 3 — Cierre: squash merge y producción
+- **Hecho**: Albert revisa la preview; hay detalles que no le terminan de convencer, pero se revisarán al final (anotado en el backlog). Squash merge del PR #4 (`f77ca41`), rama borrada. Producción verificada: cota 543 PX, 6/6 nodos, CLS 0 en 1440 / 390 / 360 px, contadores correctos en ES y EN.
+- **Problemas / notas**: Vercel no recibió el aviso de GitHub de un push (`484159e`: sin estado ni "pendiente"). Se resolvió con un commit vacío que relanzó el despliegue (desaparece con el squash). Si vuelve a pasar: comprobar el estado del commit con `gh api repos/AlbertBC22/Albert-web/commits/<sha>/statuses`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · producción ☑
 
 ### 2026-10-19 — Fase 3 — Cifras, Stack, Idiomas, Intereses y CTA
 - **Hecho**:
@@ -278,3 +286,5 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 - Modo oscuro.
 - (Fase 10) 404: conseguir que el contenido venga en el HTML del servidor (ahora se pinta en el cliente por `cacheComponents`).
 - (Fase 5/7/8) Las lecturas públicas de Supabase no deben usar `cookies()` (convertiría las páginas en dinámicas): usar un cliente anónimo sin cookies y `use cache`.
+- **Revisión visual de la página principal** cuando esté todo hecho: a Albert hay cosas que no le terminan de convencer (detalles por concretar).
+- Emisor de las certificaciones "Java SE Fundamentals" y "Administración de Windows 10" (ahora "—"), si Albert lo recupera.
