@@ -90,6 +90,29 @@
       "present": "actualidad",
       "other": "Otras experiencias",
       "links": "Disponible en"
+    },
+    "stats": {
+      "label": "Cifras",
+      "title": "Cifras"
+    },
+    "stack": {
+      "label": "Stack técnico",
+      "title": "Stack técnico"
+    },
+    "languages": {
+      "label": "Idiomas",
+      "title": "Idiomas"
+    },
+    "interests": {
+      "label": "Intereses",
+      "title": "Intereses",
+      "gallery": "Ver la galería"
+    },
+    "cta": {
+      "label": "Contacto",
+      "title": "¿Hablamos?",
+      "text": "Si te interesa mi perfil o quieres proponerme algo, escríbeme desde el formulario de contacto.",
+      "button": "Escribirme"
     }
   },
   "Common": {

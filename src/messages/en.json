@@ -90,6 +90,29 @@
       "present": "present",
       "other": "Other experience",
       "links": "Available on"
+    },
+    "stats": {
+      "label": "Figures",
+      "title": "Key figures"
+    },
+    "stack": {
+      "label": "Tech stack",
+      "title": "Tech stack"
+    },
+    "languages": {
+      "label": "Languages",
+      "title": "Languages"
+    },
+    "interests": {
+      "label": "Interests",
+      "title": "Interests",
+      "gallery": "View the gallery"
+    },
+    "cta": {
+      "label": "Contact",
+      "title": "Let’s talk",
+      "text": "If my profile interests you or you’d like to propose something, write to me through the contact form.",
+      "button": "Write to me"
     }
   },
   "Common": {

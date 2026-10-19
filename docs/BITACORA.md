@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 3 — Página principal (⏸ tras Hero + Perfil + Experiencia)
-- **Último paso completado**: contenido tipado del CV (ES + propuesta EN) y secciones Hero, Perfil y Experiencia
-- **Siguiente paso**: Cifras, Stack, Idiomas, Intereses y CTA
-- **Esperando a Albert**: —
+- **Fase actual**: Fase 3 — Página principal (cerrada en local, PR #4 pendiente de revisión)
+- **Último paso completado**: página principal completa (Hero → CTA) en ES y EN
+- **Siguiente paso**: revisar la preview → merge; después, Fase 4 — Formación
+- **Esperando a Albert**: revisar la preview del PR #4 y autorizar el merge
 
 ## Estado por fase
 
@@ -19,7 +19,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
-| 3 | Página principal (scroll) | ⏸ | `fase-03-principal` | |
+| 3 | Página principal (scroll) | ◐ (cerrada en local) | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
@@ -85,6 +85,18 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 3 — Cifras, Stack, Idiomas, Intereses y CTA
+- **Hecho**:
+  - **Cifras (REF. 03)**: cifras grandes con degradado de acento y contador (`CountUp`); el rango 6–7 cuenta en sus dos extremos y el embudo 100 → 5 → 1 cuenta paso a paso (retardo encadenado). Cada contador reserva el ancho de su valor final: el HTML ya trae el valor y no hay saltos.
+  - **Stack (REF. 04)**: leyenda de plano con símbolo A–G por categoría y línea guía discontinua; las filas aparecen y las líneas se trazan (`StaggerReveal` variante `legend`).
+  - **Idiomas (REF. 05)**: escala gráfica de 10 segmentos (negro / azul alternos) rellena según el nivel; se rellena segmento a segmento (variante `scale`).
+  - **Intereses (REF. 06)**: tres láminas descubiertas con un barrido (variante `wipe`); la de fotografía enlaza a la galería con el botón de garabato.
+  - **CTA (REF. 07)**: "¿Hablamos?" con cota, texto revelado línea a línea y botón destacado a `/contacto`.
+- **Archivos creados**: `src/components/motion/{CountUp,StaggerReveal}.tsx`, `src/components/sections/{Stats,Stack,Languages,Interests,ContactCta}.tsx`.
+- **Archivos modificados**: `src/app/[locale]/page.tsx`, `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Problemas / notas**: en español `Intl` no agrupa los números de 4 cifras ("1500"); `useGrouping: "always"` → "1.500", como en `CONTENIDO.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright: contadores con el valor final correcto en ES y EN, CLS 0 en 1440 / 390 / 360 px, sin scroll horizontal, reduced motion sin animaciones, sin regresiones en loader / cursor / cabecera, sin errores de consola.
 
 ### 2026-10-19 — Fase 3 — Revisión del ⏸ y enlaces de NITS
 - **Hecho**: Albert revisa en local las tres secciones y da el visto bueno (también a la traducción). Aporta las URLs de NITS: se añaden en `NITS_LINKS` (`flags.ts`), ligadas a `NITS_PUBLISHED`, y se muestran en la lámina de Chimera ("Disponible en: App Store ↗ Google Play ↗"). De la URL de Google Play se quita `hl=es` para que la tienda use el idioma del visitante. `ExternalLink` pasa a componente compartido y el aviso "(se abre en una pestaña nueva)" a `Common.newTab`.
