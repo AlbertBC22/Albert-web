@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Page under construction."
   },
-  "HomePage": {
-    "title": "Albert Batiste Castellet"
-  },
   "EducationPage": {
     "title": "Education"
   },
@@ -69,5 +66,56 @@
     "step3": "Developing photographs",
     "step4": "Signing title block",
     "skip": "Skip"
+  },
+  "Home": {
+    "hero": {
+      "label": "General plan",
+      "scroll": "Scroll to continue",
+      "photoPending": "Photo — pending",
+      "photoAlt": "Placeholder for Albert Batiste’s portrait",
+      "location": "Location",
+      "links": "Links"
+    },
+    "profile": {
+      "label": "Profile",
+      "title": "Profile"
+    },
+    "experience": {
+      "label": "Experience",
+      "title": "Experience",
+      "company": "Company",
+      "project": "Project",
+      "location": "Location",
+      "mode": "Work mode",
+      "present": "present",
+      "other": "Other experience",
+      "links": "Available on"
+    },
+    "stats": {
+      "label": "Figures",
+      "title": "Key figures"
+    },
+    "stack": {
+      "label": "Tech stack",
+      "title": "Tech stack"
+    },
+    "languages": {
+      "label": "Languages",
+      "title": "Languages"
+    },
+    "interests": {
+      "label": "Interests",
+      "title": "Interests",
+      "gallery": "View the gallery"
+    },
+    "cta": {
+      "label": "Contact",
+      "title": "Let’s talk",
+      "text": "If my profile interests you or you’d like to propose something, write to me through the contact form.",
+      "button": "Write to me"
+    }
+  },
+  "Common": {
+    "newTab": "(opens in a new tab)"
   }
 }

@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Página en construcción."
   },
-  "HomePage": {
-    "title": "Albert Batiste Castellet"
-  },
   "EducationPage": {
     "title": "Formación"
   },
@@ -69,5 +66,56 @@
     "step3": "Revelando fotografías",
     "step4": "Firmando cajetín",
     "skip": "Saltar"
+  },
+  "Home": {
+    "hero": {
+      "label": "Plano general",
+      "scroll": "Scroll para continuar",
+      "photoPending": "Foto — pendiente",
+      "photoAlt": "Espacio reservado para el retrato de Albert Batiste",
+      "location": "Ubicación",
+      "links": "Enlaces"
+    },
+    "profile": {
+      "label": "Perfil",
+      "title": "Perfil"
+    },
+    "experience": {
+      "label": "Experiencia",
+      "title": "Experiencia",
+      "company": "Empresa",
+      "project": "Proyecto",
+      "location": "Lugar",
+      "mode": "Modalidad",
+      "present": "actualidad",
+      "other": "Otras experiencias",
+      "links": "Disponible en"
+    },
+    "stats": {
+      "label": "Cifras",
+      "title": "Cifras"
+    },
+    "stack": {
+      "label": "Stack técnico",
+      "title": "Stack técnico"
+    },
+    "languages": {
+      "label": "Idiomas",
+      "title": "Idiomas"
+    },
+    "interests": {
+      "label": "Intereses",
+      "title": "Intereses",
+      "gallery": "Ver la galería"
+    },
+    "cta": {
+      "label": "Contacto",
+      "title": "¿Hablamos?",
+      "text": "Si te interesa mi perfil o quieres proponerme algo, escríbeme desde el formulario de contacto.",
+      "button": "Escribirme"
+    }
+  },
+  "Common": {
+    "newTab": "(se abre en una pestaña nueva)"
   }
 }

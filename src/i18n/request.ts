@@ -15,6 +15,8 @@ export default getRequestConfig(async () => {
 
   return {
     locale,
+    // Zona fija para formatear fechas igual en servidor y navegador
+    timeZone: "Europe/Madrid",
     messages: (await import(`../messages/${locale}.json`)).default,
   };
 });

@@ -7,17 +7,24 @@ import { MOTION_OK } from "@/lib/animations/motion";
 type Props = {
   value: string;
   orientation?: "horizontal" | "vertical";
+  animated?: boolean; // false: sin animación propia (la controla quien la usa, p. ej. el hero)
   className?: string;
 };
 
 // Cota: línea de medida con topes, flechas y valor centrado.
 // Al entrar en pantalla las dos mitades se extienden desde el valor hacia los extremos.
-export default function DimensionLine({ value, orientation = "horizontal", className = "" }: Props) {
+export default function DimensionLine({
+  value,
+  orientation = "horizontal",
+  animated = true,
+  className = "",
+}: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const isHorizontal = orientation === "horizontal";
 
   useGSAP(
     () => {
+      if (!animated) return;
       gsap.matchMedia().add(MOTION_OK, () => {
         const tl = gsap.timeline({
           scrollTrigger: { trigger: ref.current, start: "top 90%", once: true },

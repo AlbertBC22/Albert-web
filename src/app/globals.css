@@ -360,3 +360,73 @@ html.loader-active {
     pointer-events: none;
   }
 }
+
+/* ==========================================================================
+   Página principal
+   ========================================================================== */
+@layer components {
+  /* Nodo de la línea de tiempo: se rellena de azul cuando la línea llega a él */
+  .bp-timeline-node {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .bp-timeline-node.is-active {
+    border-color: var(--sky);
+    background: var(--sky);
+  }
+
+  /* [Scroll para continuar]: una marca que baja una y otra vez */
+  .bp-scroll-hint {
+    transform-origin: top;
+    animation: bp-scroll-hint 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+}
+
+@keyframes bp-scroll-hint {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  50.1% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* Estados iniciales del hero (los anima HeroAnimation): solo con JS y sin reduced motion,
+   para que no se vea la composición final un instante antes de animar. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-hero-name] {
+    transform: translateY(110%);
+  }
+
+  .js [data-hero-dim-x] {
+    clip-path: inset(0 50% 0 50%);
+  }
+
+  .js [data-hero-dim-y] {
+    clip-path: inset(50% 0 50% 0);
+  }
+
+  .js :is([data-hero-fade], [data-hero-corner]) {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-scroll-hint {
+    animation: none;
+    transform: none;
+  }
+}
