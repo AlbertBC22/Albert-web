@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Página en construcción."
   },
-  "HomePage": {
-    "title": "Albert Batiste Castellet"
-  },
   "EducationPage": {
     "title": "Formación"
   },
@@ -69,5 +66,30 @@
     "step3": "Revelando fotografías",
     "step4": "Firmando cajetín",
     "skip": "Saltar"
+  },
+  "Home": {
+    "hero": {
+      "label": "Plano general",
+      "scroll": "Scroll para continuar",
+      "photoPending": "Foto — pendiente",
+      "photoAlt": "Espacio reservado para el retrato de Albert Batiste",
+      "location": "Ubicación",
+      "links": "Enlaces",
+      "newTab": "(se abre en una pestaña nueva)"
+    },
+    "profile": {
+      "label": "Perfil",
+      "title": "Perfil"
+    },
+    "experience": {
+      "label": "Experiencia",
+      "title": "Experiencia",
+      "company": "Empresa",
+      "project": "Proyecto",
+      "location": "Lugar",
+      "mode": "Modalidad",
+      "present": "actualidad",
+      "other": "Otras experiencias"
+    }
   }
 }

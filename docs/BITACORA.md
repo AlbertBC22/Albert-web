@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 3 — Página principal (scroll)
-- **Último paso completado**: Fase 2 cerrada y en producción (squash merge, PR #3)
-- **Siguiente paso**: contenido tipado del CV + Hero, Perfil y Experiencia → ⏸
-- **Esperando a Albert**: —
+- **Fase actual**: Fase 3 — Página principal (⏸ tras Hero + Perfil + Experiencia)
+- **Último paso completado**: contenido tipado del CV (ES + propuesta EN) y secciones Hero, Perfil y Experiencia
+- **Siguiente paso**: Cifras, Stack, Idiomas, Intereses y CTA
+- **Esperando a Albert**: revisar las tres secciones y la traducción al inglés (`src/content/cv.en.ts`); enlaces de NITS en las tiendas (si los quiere)
 
 ## Estado por fase
 
@@ -19,7 +19,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 0 | Verificación del entorno | ☑ | `fase-00-entorno` | [#1](https://github.com/AlbertBC22/Albert-web/pull/1) (merge) |
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
-| 3 | Página principal (scroll) | ◐ | `fase-03-principal` | |
+| 3 | Página principal (scroll) | ⏸ | `fase-03-principal` | |
 | 4 | Formación | ☐ | | |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
@@ -85,6 +85,22 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 3 ⏸ — Contenido del CV, Hero, Perfil y Experiencia
+- **Hecho**:
+  - Contenido tipado: `src/types/cv.ts`, `src/content/cv.es.ts` (de `CONTENIDO.md`, sin inventar datos), `src/content/cv.en.ts` (traducción propuesta, pendiente de revisión), `getCv(locale)` y el interruptor `NITS_PUBLISHED` (`src/content/flags.ts`).
+  - **Hero**: nombre que sube línea a línea con máscara; encima, una cota que mide el ancho real del titular en px (`MeasuredDimension`, con `ResizeObserver`); rol, tagline, ficha (ubicación, LinkedIn, GitHub); foto pendiente en marco 4:5 con esquinas que se trazan y cotas 4 y 5; `[Scroll para continuar]` con una marca animada. La entrada espera a que se abra la pantalla de carga (`onLoaderReveal` + evento `loader:reveal`).
+  - **Perfil (REF. 01)**: texto grande revelado línea a línea con SplitText (`mask: "lines"`, `autoSplit`).
+  - **Experiencia (REF. 02)**: línea de tiempo vertical con *scrub*; nodos que se rellenan de azul al llegar la línea; cada puesto es una lámina (`BlueprintFrame`) con periodo, ficha, logros y la anotación de aprendizaje en NITS; "Otras experiencias" al final.
+  - Fechas formateadas por idioma con `getFormatter` (zona `Europe/Madrid` en `i18n/request.ts`).
+- **Archivos creados**: `src/types/cv.ts`, `src/content/{cv.es,cv.en,flags,index}.ts`, `src/components/sections/{SectionHeading,Hero,Profile,Experience}.tsx`, `src/components/motion/{HeroAnimation,MeasuredDimension,SplitReveal,TimelineAnimation}.tsx`.
+- **Archivos modificados**: `src/app/[locale]/page.tsx`, `src/app/globals.css` (nodos, indicación de scroll, estados iniciales del hero), `src/lib/loader.ts` (`onLoaderReveal`), `Loader.tsx` (evento de apertura), `LoaderScript.tsx` (clase `js`), `DimensionLine.tsx` (prop `animated`), `src/i18n/request.ts` (zona horaria), `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - `toggleClass` de ScrollTrigger desactivaba los nodos al salir la lámina por arriba → `onEnter` / `onLeaveBack`.
+  - Los estados iniciales del hero van en CSS solo con la clase `js` y sin reduced motion: sin JS o con movimiento reducido todo se ve desde el principio.
+  - El periodo salía dos veces (arriba y en la ficha): se quita de la ficha.
+  - Pendiente de Albert: URLs de NITS en App Store / Google Play (no están en `CONTENIDO.md`; de momento no hay enlaces).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright: CLS 0 en 1440, 390 y 360 px; sin scroll horizontal; línea de tiempo con scrub y 6/6 nodos; reduced motion sin animaciones; loader, cursor y cabecera sin regresiones; sin errores de consola.
 
 ### 2026-10-19 — Fase 2 — Cierre: squash merge y producción
 - **Hecho**: PR #3 con preview correcta; squash merge a `main` (`4313358`), rama borrada. Producción verificada con las mismas pruebas de navegador que en local (loader, cursor, cabecera, cajetín, móvil y reduced motion).

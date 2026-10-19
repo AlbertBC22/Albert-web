@@ -19,9 +19,6 @@
   "Placeholder": {
     "notice": "Page under construction."
   },
-  "HomePage": {
-    "title": "Albert Batiste Castellet"
-  },
   "EducationPage": {
     "title": "Education"
   },
@@ -69,5 +66,30 @@
     "step3": "Developing photographs",
     "step4": "Signing title block",
     "skip": "Skip"
+  },
+  "Home": {
+    "hero": {
+      "label": "General plan",
+      "scroll": "Scroll to continue",
+      "photoPending": "Photo — pending",
+      "photoAlt": "Placeholder for Albert Batiste’s portrait",
+      "location": "Location",
+      "links": "Links",
+      "newTab": "(opens in a new tab)"
+    },
+    "profile": {
+      "label": "Profile",
+      "title": "Profile"
+    },
+    "experience": {
+      "label": "Experience",
+      "title": "Experience",
+      "company": "Company",
+      "project": "Project",
+      "location": "Location",
+      "mode": "Work mode",
+      "present": "present",
+      "other": "Other experience"
+    }
   }
 }

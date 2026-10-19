@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/animations/gsap";
-import { LOADER_STORAGE_KEY } from "@/lib/loader";
+import { LOADER_REVEAL_EVENT, LOADER_STORAGE_KEY } from "@/lib/loader";
 
 // Retícula del loader: líneas cada 80 px desde el centro de la pantalla.
 const VERTICALS = Array.from({ length: 25 }, (_, i) => (i - 12) * 80);
@@ -89,6 +89,15 @@ export default function Loader() {
       tl.addLabel("exit", 1.45)
         .to("[data-content]", { autoAlpha: 0, duration: 0.25 }, "exit")
         .fromTo("[data-seam]", { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power3.inOut" }, "exit")
+        // Aviso para las animaciones de la página (p. ej. el hero): la web empieza a verse
+        .call(
+          () => {
+            html.classList.add("loader-revealing");
+            window.dispatchEvent(new Event(LOADER_REVEAL_EVENT));
+          },
+          undefined,
+          "exit+=0.3",
+        )
         .to("[data-panel='top']", { yPercent: -100, duration: 0.7, ease: "power3.inOut" }, "exit+=0.3")
         .to("[data-panel='bottom']", { yPercent: 100, duration: 0.7, ease: "power3.inOut" }, "exit+=0.3")
         .to("[data-seam]", { autoAlpha: 0, duration: 0.2 }, "exit+=0.3");
