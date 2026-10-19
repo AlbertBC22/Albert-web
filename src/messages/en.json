@@ -74,8 +74,7 @@
       "photoPending": "Photo — pending",
       "photoAlt": "Placeholder for Albert Batiste’s portrait",
       "location": "Location",
-      "links": "Links",
-      "newTab": "(opens in a new tab)"
+      "links": "Links"
     },
     "profile": {
       "label": "Profile",
@@ -89,7 +88,11 @@
       "location": "Location",
       "mode": "Work mode",
       "present": "present",
-      "other": "Other experience"
+      "other": "Other experience",
+      "links": "Available on"
     }
+  },
+  "Common": {
+    "newTab": "(opens in a new tab)"
   }
 }

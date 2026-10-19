@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import DimensionLine from "@/components/blueprint/DimensionLine";
+import ExternalLink from "@/components/blueprint/ExternalLink";
 import SectionLabel from "@/components/blueprint/SectionLabel";
 import SpecList from "@/components/blueprint/SpecList";
 import HeroAnimation from "@/components/motion/HeroAnimation";
@@ -18,6 +19,7 @@ const CORNERS = [
 // Las marcas data-hero-* las anima HeroAnimation.
 export default async function Hero({ cv }: { cv: Cv }) {
   const t = await getTranslations("Home.hero");
+  const tCommon = await getTranslations("Common");
 
   return (
     <HeroAnimation
@@ -55,8 +57,8 @@ export default async function Hero({ cv }: { cv: Cv }) {
                 label: t("links"),
                 value: (
                   <span className="flex flex-wrap gap-x-5 gap-y-1">
-                    <ExternalLink href={cv.links.linkedin} newTab={t("newTab")}>LinkedIn</ExternalLink>
-                    <ExternalLink href={cv.links.github} newTab={t("newTab")}>GitHub</ExternalLink>
+                    <ExternalLink href={cv.links.linkedin} newTabLabel={tCommon("newTab")}>LinkedIn</ExternalLink>
+                    <ExternalLink href={cv.links.github} newTabLabel={tCommon("newTab")}>GitHub</ExternalLink>
                   </span>
                 ),
               },
@@ -100,14 +102,5 @@ export default async function Hero({ cv }: { cv: Cv }) {
         <span aria-hidden className="bp-scroll-hint h-6 w-px bg-ink-muted" />[{t("scroll")}]
       </p>
     </HeroAnimation>
-  );
-}
-
-function ExternalLink({ href, newTab, children }: { href: string; newTab: string; children: string }) {
-  return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="underline decoration-line underline-offset-4 hover:decoration-ink">
-      {children} <span aria-hidden>↗</span>
-      <span className="sr-only">{newTab}</span>
-    </a>
   );
 }

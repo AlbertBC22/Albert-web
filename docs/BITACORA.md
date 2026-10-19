@@ -8,7 +8,7 @@ Las entradas del registro van de la más reciente a la más antigua.
 - **Fase actual**: Fase 3 — Página principal (⏸ tras Hero + Perfil + Experiencia)
 - **Último paso completado**: contenido tipado del CV (ES + propuesta EN) y secciones Hero, Perfil y Experiencia
 - **Siguiente paso**: Cifras, Stack, Idiomas, Intereses y CTA
-- **Esperando a Albert**: revisar las tres secciones y la traducción al inglés (`src/content/cv.en.ts`); enlaces de NITS en las tiendas (si los quiere)
+- **Esperando a Albert**: —
 
 ## Estado por fase
 
@@ -85,6 +85,12 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-19 — Fase 3 — Revisión del ⏸ y enlaces de NITS
+- **Hecho**: Albert revisa en local las tres secciones y da el visto bueno (también a la traducción). Aporta las URLs de NITS: se añaden en `NITS_LINKS` (`flags.ts`), ligadas a `NITS_PUBLISHED`, y se muestran en la lámina de Chimera ("Disponible en: App Store ↗ Google Play ↗"). De la URL de Google Play se quita `hl=es` para que la tienda use el idioma del visitante. `ExternalLink` pasa a componente compartido y el aviso "(se abre en una pestaña nueva)" a `Common.newTab`.
+- **Archivos creados**: `src/components/blueprint/ExternalLink.tsx`.
+- **Archivos modificados**: `src/types/cv.ts`, `src/content/{flags,cv.es,cv.en}.ts`, `Hero.tsx`, `Experience.tsx`, `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · enlaces presentes en el HTML de `/en`.
 
 ### 2026-10-19 — Fase 3 ⏸ — Contenido del CV, Hero, Perfil y Experiencia
 - **Hecho**:

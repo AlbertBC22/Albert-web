@@ -1,5 +1,5 @@
 import type { Cv } from "@/types/cv";
-import { NITS_PUBLISHED } from "./flags";
+import { NITS_LINKS, NITS_PUBLISHED } from "./flags";
 
 // CV content in English. Translation of cv.es.ts proposed by Claude, pending Albert's review.
 export const cvEn: Cv = {
@@ -57,6 +57,7 @@ export const cvEn: Cv = {
         title: "Lesson learned",
         text: "The project closed in October 2026 without becoming established, but it taught me a great deal about what it means to be part of a team, to keep finding a way forward every day, and to understand the importance of every process in a project and the responsibilities that come with it.",
       },
+      links: NITS_LINKS,
     },
     {
       id: "suited",

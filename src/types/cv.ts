@@ -19,6 +19,7 @@ export type Experience = {
   end: YearMonth | null; // null = actualidad
   highlights: string[];
   note?: { title: string; text: string }; // anotación destacada (aprendizaje)
+  links?: ExternalLink[]; // p. ej. NITS en las tiendas
 };
 
 export type Stat =

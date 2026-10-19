@@ -74,8 +74,7 @@
       "photoPending": "Foto — pendiente",
       "photoAlt": "Espacio reservado para el retrato de Albert Batiste",
       "location": "Ubicación",
-      "links": "Enlaces",
-      "newTab": "(se abre en una pestaña nueva)"
+      "links": "Enlaces"
     },
     "profile": {
       "label": "Perfil",
@@ -89,7 +88,11 @@
       "location": "Lugar",
       "mode": "Modalidad",
       "present": "actualidad",
-      "other": "Otras experiencias"
+      "other": "Otras experiencias",
+      "links": "Disponible en"
     }
+  },
+  "Common": {
+    "newTab": "(se abre en una pestaña nueva)"
   }
 }

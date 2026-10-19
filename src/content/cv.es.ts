@@ -1,5 +1,5 @@
 import type { Cv } from "@/types/cv";
-import { NITS_PUBLISHED } from "./flags";
+import { NITS_LINKS, NITS_PUBLISHED } from "./flags";
 
 // Contenido del CV en español. Fuente: docs/CONTENIDO.md.
 export const cvEs: Cv = {
@@ -57,6 +57,7 @@ export const cvEs: Cv = {
         title: "Aprendizaje",
         text: "El proyecto cerró en octubre de 2026 sin llegar a consolidarse, pero me enseñó muchísimo sobre lo que significa formar parte de un equipo, buscarse la vida de forma continua y entender la importancia de cada proceso de un proyecto y de las responsabilidades que conlleva.",
       },
+      links: NITS_LINKS,
     },
     {
       id: "suited",

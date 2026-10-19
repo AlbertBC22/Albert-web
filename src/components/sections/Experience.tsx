@@ -1,5 +1,6 @@
 import { getFormatter, getTranslations } from "next-intl/server";
 import BlueprintFrame from "@/components/blueprint/BlueprintFrame";
+import ExternalLink from "@/components/blueprint/ExternalLink";
 import SpecList, { type SpecItem } from "@/components/blueprint/SpecList";
 import TimelineAnimation from "@/components/motion/TimelineAnimation";
 import type { Cv, YearMonth } from "@/types/cv";
@@ -10,6 +11,7 @@ import SectionHeading from "./SectionHeading";
 // una anotación.
 export default async function Experience({ cv }: { cv: Cv }) {
   const t = await getTranslations("Home.experience");
+  const tCommon = await getTranslations("Common");
   const format = await getFormatter();
 
   // "sept 2024" / "Sep 2024". Día 15 para que la zona horaria no cambie de mes.
@@ -54,6 +56,16 @@ export default async function Experience({ cv }: { cv: Cv }) {
                           </li>
                         ))}
                       </ul>
+                      {job.links && job.links.length > 0 && (
+                        <p className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+                          <span className="label-mono text-ink-muted">{t("links")}</span>
+                          {job.links.map((link) => (
+                            <ExternalLink key={link.href} href={link.href} newTabLabel={tCommon("newTab")}>
+                              {link.label}
+                            </ExternalLink>
+                          ))}
+                        </p>
+                      )}
                       {job.note && (
                         <aside className="border-l border-sky pl-5">
                           <p className="label-mono text-sky-ink">{job.note.title}</p>
