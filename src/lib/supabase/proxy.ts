@@ -3,8 +3,13 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 import { getSupabaseEnv } from "./env";
 
-// Refresca la sesión de Supabase (si el token ha caducado) y escribe las cookies
-// nuevas en la respuesta. Solo se usa en /admin; ver src/proxy.ts.
+const LOGIN_PATH = "/admin/login";
+
+// Para /admin/*: refresca la sesión de Supabase (si el token ha caducado) y escribe las
+// cookies nuevas en la respuesta. Además hace de primera barrera:
+// - sin sesión → /admin/login
+// - con sesión en /admin/login → /admin
+// La comprobación de que el usuario es ADMIN se hace en el servidor (requireAdmin).
 export async function updateSession(request: NextRequest) {
   const { url, publishableKey } = getSupabaseEnv();
   let response = NextResponse.next({ request });
@@ -31,7 +36,20 @@ export async function updateSession(request: NextRequest) {
   });
 
   // Debe llamarse antes de devolver la respuesta: es lo que dispara el refresco.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+  const isLoggedIn = Boolean(data?.claims);
+  const isLoginPage = request.nextUrl.pathname === LOGIN_PATH;
+
+  if (!isLoggedIn && !isLoginPage) return redirectKeepingCookies(request, response, LOGIN_PATH);
+  if (isLoggedIn && isLoginPage) return redirectKeepingCookies(request, response, "/admin");
 
   return response;
+}
+
+// Redirige conservando las cookies de sesión que haya escrito Supabase en `response`.
+function redirectKeepingCookies(request: NextRequest, response: NextResponse, path: string) {
+  const redirect = NextResponse.redirect(new URL(path, request.url));
+  response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+  redirect.headers.set("Cache-Control", "private, no-store");
+  return redirect;
 }

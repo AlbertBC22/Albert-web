@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 5 — Supabase (cerrada en local, pendiente de PR)
-- **Último paso completado**: esquema, RLS, Storage, datos de prueba, usuario admin y pruebas de seguridad
-- **Siguiente paso**: push → PR → squash merge; después, Fase 6 — Panel de administración
-- **Esperando a Albert**: autorizar el push
+- **Fase actual**: Fase 6 — Panel de administración (⏸ tras el paso 1: login y protección)
+- **Último paso completado**: login, logout, protección de `/admin/*` y portada del panel (en local)
+- **Siguiente paso**: aplicar la migración 006 → Albert prueba su login → paso 2 (álbumes y fotos)
+- **Esperando a Albert**: visto bueno al SQL de la migración 006 y prueba de login con su usuario
 
 ## Estado por fase
 
@@ -21,8 +21,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
-| 5 | Supabase: esquema, RLS y storage | ◐ (cerrada en local) | `fase-05-supabase` | |
-| 6 | Panel de administración | ☐ | | |
+| 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
+| 6 | Panel de administración | ⏸ | `fase-06-admin` | |
 | 7 | Galería de fotografía | ☐ | | |
 | 8 | Proyectos | ☐ | | |
 | 9 | Contacto | ☐ | | |
@@ -78,6 +78,10 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-21 | Validación en BD (checks de slugs, longitudes, email, estado, URLs https) y el público solo puede rellenar name/email/message/locale en `contact_messages` | No depender solo de la web |
 | 2026-10-21 | El `user_id` del admin se inserta a mano (no en el repo) | Repo público |
 | 2026-10-21 | Fotos de prueba del álbum "Prueba": se suben en la Fase 6 desde el panel | Sin clave secreta no se puede subir a Storage desde fuera; así se prueba el flujo real de EXIF |
+| 2026-10-21 | Panel: layout raíz propio (`src/app/admin`, solo ES, `noindex`) con `instant = false`: se resuelve en el servidor en cada petición | Panel privado: sin shell estático que pre-renderizar; evita envolver todo en Suspense |
+| 2026-10-21 | Doble barrera: el proxy exige sesión en `/admin/*` (salvo el login) y `requireAdmin()` comprueba en servidor que es admin | El proxy no basta por sí solo; la comprobación real va en servidor |
+| 2026-10-21 | Política "Leer la propia fila de admin" (migración 006) para que la web sepa si el usuario es admin | La alternativa (exponer `is_admin` por la API) amplía la superficie |
+| 2026-10-21 | Login con Server Action + zod; mensajes de error genéricos; se conserva el email tras un error | Seguridad y comodidad |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -95,6 +99,20 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-21 — Fase 6 ⏸ — Paso 1: login, logout y protección del panel
+- **Hecho** (Fase 5 integrada antes: squash merge del PR #7, `59d6114`):
+  - `src/app/admin/` con su propio layout raíz (ES, fuentes, retícula, `noindex`, `instant = false`).
+  - `/admin/login`: formulario (email + contraseña) en un marco de plano; Server Action `signIn` validada con zod; si la cuenta no es admin, cierra la sesión y lo indica.
+  - Proxy: en `/admin/*` refresca la sesión y redirige al login si no la hay (y del login a `/admin` si ya la hay), conservando las cookies.
+  - `src/lib/data/admin.ts`: `getAdmin()` / `requireAdmin()` (comprobación en servidor) y `getDashboardCounts()`.
+  - Armazón del panel (`(panel)/layout.tsx`): navegación lateral (Inicio activo; Álbumes y fotos, Proyectos y Mensajes como "pronto"), email del admin, "Ver la web" y "Cerrar sesión".
+  - Portada: álbumes, fotos N / límite, proyectos y mensajes sin leer.
+  - Migración `006_admins_read_own.sql` escrita, **pendiente de aplicar** tras el visto bueno de Albert.
+- **Dependencias nuevas**: `zod` (ya prevista en el stack).
+- **Archivos creados**: `src/app/admin/{layout,actions}.tsx|ts`, `src/app/admin/login/page.tsx`, `src/app/admin/(panel)/{layout,page}.tsx`, `src/components/admin/{LoginForm,AdminNav}.tsx`, `src/lib/data/admin.ts`, `supabase/migrations/006_admins_read_own.sql`.
+- **Archivos modificados**: `src/lib/supabase/proxy.ts`, `package.json`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ (`/admin` dinámica, `/admin/login` estática) · sin sesión, `/admin` y `/admin/albumes` → 307 a `/admin/login` · login con credenciales falsas → "Email o contraseña incorrectos." · pendiente: login real de Albert.
 
 ### 2026-10-21 — Fase 5 — Supabase: esquema, RLS y Storage
 - **Hecho**:
