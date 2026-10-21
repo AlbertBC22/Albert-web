@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: entre la Fase 4 (☑) y la Fase 5 — cambio de contenido suelto (premio DAW) en la rama `contenido-premio-daw`
-- **Último paso completado**: Fase 4 en producción (squash merge, PR #5); premio de DAW añadido en local
-- **Siguiente paso**: subir el cambio del premio; después, Fase 5 — Supabase
-- **Esperando a Albert**: autorizar el push del premio y dar el ok al plan de la Fase 5
+- **Fase actual**: Fase 5 — Supabase (cerrada en local, pendiente de PR)
+- **Último paso completado**: esquema, RLS, Storage, datos de prueba, usuario admin y pruebas de seguridad
+- **Siguiente paso**: push → PR → squash merge; después, Fase 6 — Panel de administración
+- **Esperando a Albert**: autorizar el push
 
 ## Estado por fase
 
@@ -21,7 +21,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
-| 5 | Supabase: esquema, RLS y storage | ☐ | | |
+| 5 | Supabase: esquema, RLS y storage | ◐ (cerrada en local) | `fase-05-supabase` | |
 | 6 | Panel de administración | ☐ | | |
 | 7 | Galería de fotografía | ☐ | | |
 | 8 | Proyectos | ☐ | | |
@@ -71,6 +71,13 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-19 | Experiencia en el orden de `CONTENIDO.md`; Suited y BeonDev son simultáneas (media jornada cada una) | Confirmado por Albert |
 | 2026-10-19 | Merge de la Fase 3 con squash; la revisión visual de la principal se hace al final del proyecto | Albert prefiere avanzar y pulir después |
 | 2026-10-19 | Formación prevista detrás del interruptor `SHOW_PLANNED_EDUCATION` (false por defecto) | Solo se muestra cuando esté en curso |
+| 2026-10-21 | Previews: en cambios pequeños se hace merge sin esperar la preview; Claude avisa de vez en cuando para revisar | Petición de Albert |
+| 2026-10-21 | Migraciones aplicadas con el MCP (sin Supabase CLI) y guardadas en `supabase/migrations/` con la versión que asigna Supabase | Sin dependencias nuevas; el repo refleja el esquema real |
+| 2026-10-21 | Funciones con privilegios (`is_admin`, límite de fotos, `updated_at`) en el esquema `private`, no expuesto por la API | Recomendación de Supabase: nadie puede llamarlas desde fuera |
+| 2026-10-21 | Límite de fotos en `private.photo_limit()` (30) + trigger con bloqueo; `get_photo_limit()` para el panel | Un solo sitio para el número; sin carreras entre subidas simultáneas |
+| 2026-10-21 | Validación en BD (checks de slugs, longitudes, email, estado, URLs https) y el público solo puede rellenar name/email/message/locale en `contact_messages` | No depender solo de la web |
+| 2026-10-21 | El `user_id` del admin se inserta a mano (no en el repo) | Repo público |
+| 2026-10-21 | Fotos de prueba del álbum "Prueba": se suben en la Fase 6 desde el panel | Sin clave secreta no se puede subir a Storage desde fuera; así se prueba el flujo real de EXIF |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -88,6 +95,29 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-21 — Fase 5 — Supabase: esquema, RLS y Storage
+- **Hecho**:
+  - 5 migraciones aplicadas con el MCP y guardadas en `supabase/migrations/`: `admins` (+ esquema `private` y `private.is_admin()`), `tables` (álbumes, fotos, proyectos, mensajes, `updated_at`, validaciones), `photo_limit` (límite de 30 con trigger y bloqueo), `rls` (lectura pública solo de lo publicado; envío de mensajes; todo lo demás, solo admin) y `storage` (buckets públicos `photos` y `projects`, 10 MB, solo imágenes; escritura solo admin).
+  - Datos de prueba (`supabase/seed.sql`, ejecutado una vez): álbum "Prueba" publicado y proyecto Albert-web.
+  - Tipos generados en `src/types/database.ts`; los clientes de Supabase (`server`, `client`, `proxy`) quedan tipados con `Database`.
+  - ⏸ Albert crea su usuario (confirmado) y desactiva el registro público; Claude lo inserta en `admins` sin guardarlo en el repo.
+- **Pruebas** (todas correctas):
+  - Visitante (SQL, transacción con rollback): ve 1 álbum y 1 proyecto (no los ocultos), 0 mensajes, 0 admins; no puede crear álbumes, proyectos, fotos ni admins; no puede fijar `read_at`; email inválido y mensaje > 5.000 rechazados; mensaje válido aceptado.
+  - Visitante (API real con la clave pública): editar álbum y borrar proyecto → 0 filas; leer mensajes y admins → vacío; `get_photo_limit` → sin permiso; `is_admin` no existe en la API; subir a Storage → 403 por RLS; **registro → `signup_disabled`**.
+  - Admin (sesión simulada): `is_admin()` verdadero, ve mensajes y álbumes sin publicar, crea álbumes, proyectos y 30 fotos; **la foto 31 se rechaza** ("Se ha alcanzado el límite de 30 fotos"); `get_photo_limit()` = 30.
+  - Usuario con sesión no admin: no puede crear álbumes ni ve mensajes ni álbumes sin publicar.
+  - Las 10 políticas de editar/borrar (4 tablas + Storage) exigen `is_admin()`.
+- **Archivos creados**: `supabase/migrations/2026102116{4313_admins,4331_tables,4338_photo_limit,4351_rls,4359_storage}.sql`, `supabase/seed.sql`, `src/types/database.ts`.
+- **Archivos modificados**: `src/lib/supabase/{server,client,proxy}.ts` (tipado), `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Las consultas de prueba con `UPDATE` / `DELETE` se rechazan automáticamente en el MCP aunque vayan en una transacción con rollback: esas pruebas se hacen contra la API real o revisando las políticas.
+  - Advisors: solo INFO esperados (`admins` sin políticas a propósito; índices sin usar con la BD vacía) y un WARN de *Leaked Password Protection* (backlog).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · pruebas de RLS ☑
+
+### 2026-10-21 — Premio de DAW en producción e incidencia de GitHub
+- **Hecho**: squash merge del PR #6 (`2616a29`), a petición de Albert sin esperar la preview (cambio pequeño).
+- **Problemas / notas**: incidencia de GitHub ("GitHub Outage" en el panel de Vercel): los despliegues se retrasaron y GitHub no mostraba el estado de Vercel (los commits salían "sin estado" aunque las previews sí se construían). Producción se actualizó sola al resolverse. **Si se repite: mirar primero si Vercel muestra un aviso de incidencia de GitHub.**
 
 ### 2026-10-21 — Contenido — Premio del proyecto de DAW
 - **Hecho**: a petición de Albert, se añade que el proyecto de DAW (Monlau FP, 2023–2024) ganó el premio al mejor proyecto de DAW y, a la vez, el del ciclo de Marketing, porque se hizo junto con estudiantes de Marketing. El proyecto se llamaba **Spotted** y fue la primera versión de lo que acabaría siendo NITS. Campo `award` en `Education`; se muestra en la lámina como anotación azul "Premio" / "Award" (como el aprendizaje de NITS). También en `docs/CONTENIDO.md`.
@@ -307,4 +337,5 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 - **Revisión visual de la página principal** cuando esté todo hecho: a Albert hay cosas que no le terminan de convencer (detalles por concretar).
 - **Revisar los textos** de la página principal y de la de formación (contenido de `cv.es.ts` / `cv.en.ts` y mensajes de interfaz).
 - **"Desimplificar" la web**: Albert quiere componentes algo más complejos / elaborados. Él buscará referencias; se concretará cuando las traiga.
+- Supabase Auth: activar *Leaked Password Protection* si el plan lo permite (aviso del advisor; riesgo bajo con registro desactivado y un único usuario).
 - Emisor de las certificaciones "Java SE Fundamentals" y "Administración de Windows 10" (ahora "—"), si Albert lo recupera.
