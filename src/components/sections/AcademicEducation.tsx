@@ -5,7 +5,8 @@ import TimelineAnimation from "@/components/motion/TimelineAnimation";
 import type { Cv } from "@/types/cv";
 import SectionHeading from "./SectionHeading";
 
-// REF. 01 — Formación académica: misma línea de tiempo que la experiencia.
+// REF. 01 — Formación académica: misma línea de tiempo que la experiencia. Los premios
+// van como anotación azul, igual que el aprendizaje de NITS.
 export default async function AcademicEducation({ cv }: { cv: Cv }) {
   const t = await getTranslations("Education.academic");
 
@@ -29,6 +30,12 @@ export default async function AcademicEducation({ cv }: { cv: Cv }) {
                   </div>
                   <SpecList items={[{ label: t("center"), value: item.center }]} className="text-sm" />
                 </div>
+                {item.award && (
+                  <aside className="mt-8 border-l border-sky pl-5">
+                    <p className="label-mono text-sky-ink">{t("award")}</p>
+                    <p className="mt-2 text-ink-muted">{item.award}</p>
+                  </aside>
+                )}
               </BlueprintFrame>
             </div>
           </li>

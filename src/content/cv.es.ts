@@ -163,7 +163,15 @@ export const cvEs: Cv = {
     },
   ],
   education: [
-    { id: "daw", title: "Desarrollador de aplicaciones web", center: "Monlau FP", start: 2023, end: 2024 },
+    {
+      id: "daw",
+      title: "Desarrollador de aplicaciones web",
+      center: "Monlau FP",
+      start: 2023,
+      end: 2024,
+      award:
+        "Premio al mejor proyecto de DAW y, a la vez, premio del ciclo de Marketing: el proyecto se desarrolló conjuntamente con estudiantes de Marketing.",
+    },
     {
       id: "dam",
       title: "Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)",

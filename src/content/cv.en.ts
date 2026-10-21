@@ -158,7 +158,15 @@ export const cvEn: Cv = {
     },
   ],
   education: [
-    { id: "daw", title: "Web Application Developer", center: "Monlau FP", start: 2023, end: 2024 },
+    {
+      id: "daw",
+      title: "Web Application Developer",
+      center: "Monlau FP",
+      start: 2023,
+      end: 2024,
+      award:
+        "Best Project award in the Web Application Development (DAW) programme and, at the same time, the Marketing programme’s award: the project was developed jointly with Marketing students.",
+    },
     {
       id: "dam",
       title: "Higher Vocational Diploma in Multiplatform Application Development (DAM)",

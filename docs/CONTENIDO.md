@@ -86,6 +86,7 @@ Barcelona · nov. 2022 – jun. 2023
 ## Formación (página /formacion)
 
 - Desarrollador de aplicaciones web — Monlau FP (2023 – 2024)
+  - **Premio**: el proyecto ganó el premio al mejor proyecto de DAW y, a la vez, el premio del ciclo de Marketing; se desarrolló conjuntamente con estudiantes de Marketing.
 - Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM) — Monlau FP (2020 – 2023)
 - Sistemas microinformáticos y redes — Salesians Sarrià (2019 – 2021)
 
