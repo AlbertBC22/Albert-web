@@ -8,7 +8,7 @@ Las entradas del registro van de la más reciente a la más antigua.
 - **Fase actual**: Fase 6 — Panel de administración (⏸ tras el paso 1: login y protección)
 - **Último paso completado**: login, logout, protección de `/admin/*` y portada del panel (en local)
 - **Siguiente paso**: aplicar la migración 006 → Albert prueba su login → paso 2 (álbumes y fotos)
-- **Esperando a Albert**: visto bueno al SQL de la migración 006 y prueba de login con su usuario
+- **Esperando a Albert**: probar su login con la migración 006 ya aplicada
 
 ## Estado por fase
 
@@ -108,9 +108,9 @@ Plantilla de entrada (copiar arriba del todo):
   - `src/lib/data/admin.ts`: `getAdmin()` / `requireAdmin()` (comprobación en servidor) y `getDashboardCounts()`.
   - Armazón del panel (`(panel)/layout.tsx`): navegación lateral (Inicio activo; Álbumes y fotos, Proyectos y Mensajes como "pronto"), email del admin, "Ver la web" y "Cerrar sesión".
   - Portada: álbumes, fotos N / límite, proyectos y mensajes sin leer.
-  - Migración `006_admins_read_own.sql` escrita, **pendiente de aplicar** tras el visto bueno de Albert.
+  - Migración `20261021173444_admins_read_own.sql` aplicada con el visto bueno de Albert (antes, su login daba "Esta cuenta no tiene acceso al panel", como se esperaba). Probada: el admin ve su fila; otro usuario y el visitante, 0.
 - **Dependencias nuevas**: `zod` (ya prevista en el stack).
-- **Archivos creados**: `src/app/admin/{layout,actions}.tsx|ts`, `src/app/admin/login/page.tsx`, `src/app/admin/(panel)/{layout,page}.tsx`, `src/components/admin/{LoginForm,AdminNav}.tsx`, `src/lib/data/admin.ts`, `supabase/migrations/006_admins_read_own.sql`.
+- **Archivos creados**: `src/app/admin/{layout,actions}.tsx|ts`, `src/app/admin/login/page.tsx`, `src/app/admin/(panel)/{layout,page}.tsx`, `src/components/admin/{LoginForm,AdminNav}.tsx`, `src/lib/data/admin.ts`, `supabase/migrations/20261021173444_admins_read_own.sql`.
 - **Archivos modificados**: `src/lib/supabase/proxy.ts`, `package.json`, `docs/BITACORA.md`.
 - **Verificación**: lint ☑ · typecheck ☑ · build ☑ (`/admin` dinámica, `/admin/login` estática) · sin sesión, `/admin` y `/admin/albumes` → 307 a `/admin/login` · login con credenciales falsas → "Email o contraseña incorrectos." · pendiente: login real de Albert.
 
