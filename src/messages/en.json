@@ -122,7 +122,8 @@
     "academic": {
       "label": "Academic background",
       "title": "Academic background",
-      "center": "School"
+      "center": "School",
+      "award": "Award"
     },
     "certifications": {
       "label": "Certifications",

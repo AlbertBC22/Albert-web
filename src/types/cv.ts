@@ -51,6 +51,7 @@ export type Education = {
   center: string;
   start: number; // año
   end: number;
+  award?: string; // premio o reconocimiento destacado
 };
 
 export type Certification = {

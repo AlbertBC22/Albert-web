@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 4 — Formación (cerrada en local, pendiente de PR)
-- **Último paso completado**: página `/formacion` · `/en/education` con formación académica y certificaciones
-- **Siguiente paso**: push → PR → preview → squash merge; después, Fase 5 — Supabase
-- **Esperando a Albert**: autorizar el push y revisar la preview
+- **Fase actual**: entre la Fase 4 (☑) y la Fase 5 — cambio de contenido suelto (premio DAW) en la rama `contenido-premio-daw`
+- **Último paso completado**: Fase 4 en producción (squash merge, PR #5); premio de DAW añadido en local
+- **Siguiente paso**: subir el cambio del premio; después, Fase 5 — Supabase
+- **Esperando a Albert**: autorizar el push del premio y dar el ok al plan de la Fase 5
 
 ## Estado por fase
 
@@ -20,7 +20,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 1 | Base del proyecto | ☑ | `fase-01-base` | [#2](https://github.com/AlbertBC22/Albert-web/pull/2) (merge) · [producción](https://albert-web-iota.vercel.app) |
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
-| 4 | Formación | ◐ (cerrada en local) | `fase-04-formacion` | |
+| 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☐ | | |
 | 6 | Panel de administración | ☐ | | |
 | 7 | Galería de fotografía | ☐ | | |
@@ -88,6 +88,14 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-21 — Contenido — Premio del proyecto de DAW
+- **Hecho**: a petición de Albert, se añade que el proyecto de DAW (Monlau FP, 2023–2024) ganó el premio al mejor proyecto de DAW y, a la vez, el del ciclo de Marketing, porque se hizo junto con estudiantes de Marketing. El proyecto se llamaba **Spotted** y fue la primera versión de lo que acabaría siendo NITS. Campo `award` en `Education`; se muestra en la lámina como anotación azul "Premio" / "Award" (como el aprendizaje de NITS). También en `docs/CONTENIDO.md`.
+- **Archivos modificados**: `docs/CONTENIDO.md`, `src/types/cv.ts`, `src/content/{cv.es,cv.en}.ts`, `src/components/sections/AcademicEducation.tsx`, `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · captura de la lámina; CLS 0 en 1440 / 360 px.
+
+### 2026-10-19 — Fase 4 — Cierre: squash merge y producción
+- **Hecho**: Albert da el visto bueno; squash merge del PR #5 (`c559972`). Producción verificada (3/3 nodos, 7 certificaciones, AB-01, CLS 0).
 
 ### 2026-10-19 — Fase 4 — Página de formación
 - **Hecho**:

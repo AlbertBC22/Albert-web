@@ -122,7 +122,8 @@
     "academic": {
       "label": "Formación académica",
       "title": "Formación académica",
-      "center": "Centro"
+      "center": "Centro",
+      "award": "Premio"
     },
     "certifications": {
       "label": "Certificaciones",
