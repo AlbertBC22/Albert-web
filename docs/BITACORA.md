@@ -90,7 +90,7 @@ Plantilla de entrada (copiar arriba del todo):
 -->
 
 ### 2026-10-21 — Contenido — Premio del proyecto de DAW
-- **Hecho**: a petición de Albert, se añade que el proyecto de DAW (Monlau FP, 2023–2024) ganó el premio al mejor proyecto de DAW y, a la vez, el del ciclo de Marketing, porque se hizo junto con estudiantes de Marketing. Campo `award` en `Education`; se muestra en la lámina como anotación azul "Premio" / "Award" (como el aprendizaje de NITS). También en `docs/CONTENIDO.md`.
+- **Hecho**: a petición de Albert, se añade que el proyecto de DAW (Monlau FP, 2023–2024) ganó el premio al mejor proyecto de DAW y, a la vez, el del ciclo de Marketing, porque se hizo junto con estudiantes de Marketing. El proyecto se llamaba **Spotted** y fue la primera versión de lo que acabaría siendo NITS. Campo `award` en `Education`; se muestra en la lámina como anotación azul "Premio" / "Award" (como el aprendizaje de NITS). También en `docs/CONTENIDO.md`.
 - **Archivos modificados**: `docs/CONTENIDO.md`, `src/types/cv.ts`, `src/content/{cv.es,cv.en}.ts`, `src/components/sections/AcademicEducation.tsx`, `src/messages/{es,en}.json`, `docs/BITACORA.md`.
 - **Verificación**: lint ☑ · typecheck ☑ · build ☑ · captura de la lámina; CLS 0 en 1440 / 360 px.
 

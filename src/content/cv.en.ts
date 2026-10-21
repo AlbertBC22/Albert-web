@@ -165,7 +165,7 @@ export const cvEn: Cv = {
       start: 2023,
       end: 2024,
       award:
-        "Best Project award in the Web Application Development (DAW) programme and, at the same time, the Marketing programme’s award: the project was developed jointly with Marketing students.",
+        "Best Project award in the Web Application Development (DAW) programme and, at the same time, the Marketing programme’s award for Spotted, built jointly with Marketing students: the first version of what would become NITS.",
     },
     {
       id: "dam",

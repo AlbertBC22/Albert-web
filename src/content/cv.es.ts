@@ -170,7 +170,7 @@ export const cvEs: Cv = {
       start: 2023,
       end: 2024,
       award:
-        "Premio al mejor proyecto de DAW y, a la vez, premio del ciclo de Marketing: el proyecto se desarrolló conjuntamente con estudiantes de Marketing.",
+        "Premio al mejor proyecto de DAW y, a la vez, premio del ciclo de Marketing con Spotted, desarrollado junto a estudiantes de Marketing: la primera versión de lo que acabaría siendo NITS.",
     },
     {
       id: "dam",
