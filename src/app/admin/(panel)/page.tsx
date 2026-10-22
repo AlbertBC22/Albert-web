@@ -27,7 +27,7 @@ export default async function AdminHomePage() {
         ))}
       </dl>
       <p className="text-ink-muted">
-        Las secciones de álbumes, fotos, proyectos y mensajes se activan en los siguientes pasos.
+        Las secciones de proyectos y mensajes se activan en el siguiente paso.
       </p>
     </div>
   );

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 // los siguientes pasos de la Fase 6).
 const ITEMS = [
   { href: "/admin", label: "Inicio", ready: true },
-  { href: "/admin/albumes", label: "Álbumes y fotos", ready: false },
+  { href: "/admin/albumes", label: "Álbumes y fotos", ready: true },
   { href: "/admin/proyectos", label: "Proyectos", ready: false },
   { href: "/admin/mensajes", label: "Mensajes", ready: false },
 ];

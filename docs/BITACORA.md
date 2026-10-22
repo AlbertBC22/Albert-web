@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 6 — Panel de administración (⏸ tras el paso 1: login y protección)
-- **Último paso completado**: login, logout, protección de `/admin/*` y portada del panel (en local)
-- **Siguiente paso**: aplicar la migración 006 → Albert prueba su login → paso 2 (álbumes y fotos)
-- **Esperando a Albert**: probar su login con la migración 006 ya aplicada
+- **Fase actual**: Fase 6 — Panel de administración (⏸ tras los pasos 2–3: álbumes y fotos)
+- **Último paso completado**: gestión de álbumes y subida / edición de fotos (en local)
+- **Siguiente paso**: Albert prueba con 2–3 fotos suyas → verificar que los archivos subidos no llevan metadatos → paso 4–5 (proyectos y mensajes)
+- **Esperando a Albert**: probar álbumes y subida de fotos con su sesión
 
 ## Estado por fase
 
@@ -82,6 +82,10 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-21 | Doble barrera: el proxy exige sesión en `/admin/*` (salvo el login) y `requireAdmin()` comprueba en servidor que es admin | El proxy no basta por sí solo; la comprobación real va en servidor |
 | 2026-10-21 | Política "Leer la propia fila de admin" (migración 006) para que la web sepa si el usuario es admin | La alternativa (exponer `is_admin` por la API) amplía la superficie |
 | 2026-10-21 | Login con Server Action + zod; mensajes de error genéricos; se conserva el email tras un error | Seguridad y comodidad |
+| 2026-10-22 | Fotos: se suben desde el navegador directamente al Storage (sesión del admin + RLS) y la fila se guarda con una Server Action validada | Las Server Actions tienen un límite de cuerpo de ~1 MB; las fotos pesan más |
+| 2026-10-22 | Texto alternativo provisional al subir ("Fotografía del álbum «…»"), marcado en el panel para revisarlo | El `alt` es obligatorio en la BD y no se conoce al subir |
+| 2026-10-22 | Reordenar con botones ↑ ↓ (renumera 0, 1, 2…) en lugar de arrastrar | Sin dependencias nuevas; suficiente para ≤ 30 fotos |
+| 2026-10-22 | Miniaturas del panel con `next/image` `unoptimized` | No gastar la cuota de optimización de imágenes de Vercel en el panel |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -99,6 +103,21 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-10-22 — Fase 6 ⏸ — Pasos 2–3: álbumes y fotos
+- **Hecho**:
+  - Paso 1 cerrado: Albert entra y sale del panel correctamente.
+  - **Álbumes** (`/admin/albumes`): lista con nº de fotos, estado (publicado / borrador), publicar / despublicar y orden ↑ ↓; alta de álbum (títulos y descripciones ES/EN, slug opcional que se genera del título, publicado). **Edición** (`/admin/albumes/[id]`): mismos campos, fotos, portada y borrado del álbum (incluidos sus archivos del Storage).
+  - **Fotos**: subida múltiple arrastrando o eligiendo archivos (JPEG, PNG o WebP). En el navegador: EXIF permitido con `exifr` (`gps: false`), redimensionado a 2.500 px respetando la orientación y re-codificado con canvas a WebP 0,85 (JPEG si el navegador no codifica WebP) → archivo **sin metadatos**. Subida a `photos/{album_id}/{uuid}.webp` y fila guardada con `createPhoto` (zod; si falla, se borra el archivo subido). Contador `N / 30` global y bloqueo al llegar al límite (además del trigger de la BD).
+  - Ficha de cada foto: miniatura, dimensiones, ficha técnica, títulos y textos alternativos ES/EN (con aviso si el alt es el provisional), "Usar de portada", ↑ ↓ y borrar (BD + Storage).
+  - Todas las acciones comprueban `requireAdmin()` además de la RLS.
+- **Dependencias nuevas**: `exifr` (prevista en el stack).
+- **Archivos creados**: `src/app/admin/(panel)/albumes/{actions.ts,page.tsx,[id]/page.tsx}`, `src/components/admin/{AlbumForm,PhotoUploader,PhotoCard,fields,buttons}.tsx`, `src/lib/data/albums.ts`, `src/lib/images/processPhoto.ts`, `src/lib/supabase/storage.ts`.
+- **Archivos modificados**: `src/components/admin/AdminNav.tsx` (Álbumes activo), `src/app/admin/(panel)/page.tsx`, `package.json`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Entre `albums` y `photos` hay dos relaciones (fotos del álbum y portada): las consultas indican `photos!photos_album_id_fkey`.
+  - TypeScript normaliza las uniones de objetos devueltos (añade `error?: undefined`): `parseAlbum` usa un discriminante `ok`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · prueba del procesado con fotos reales de `exifr` (Pixel con GPS y Canon EOS 1300D): se leen cámara, objetivo, focal, f/, velocidad, ISO y fecha; **nunca GPS**; el WebP resultante (2.500 px) **no contiene ningún metadato**. Pendiente: prueba de Albert con su sesión.
 
 ### 2026-10-21 — Fase 6 ⏸ — Paso 1: login, logout y protección del panel
 - **Hecho** (Fase 5 integrada antes: squash merge del PR #7, `59d6114`):
