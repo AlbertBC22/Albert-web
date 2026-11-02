@@ -1,10 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { firstIssue, numberOrNull, slugify, SLUG, text, textOrNull, type FormState } from "@/lib/admin/forms";
 import { requireAdmin } from "@/lib/data/admin";
+import { GALLERY_TAG } from "@/lib/data/gallery";
 import { reorder } from "@/lib/data/reorder";
 import { createClient } from "@/lib/supabase/server";
 import { PHOTOS_BUCKET } from "@/lib/supabase/storage";
@@ -21,6 +22,7 @@ function dbErrorMessage(error: { code?: string; message: string }) {
 
 function refresh() {
   revalidatePath("/admin", "layout");
+  updateTag(GALLERY_TAG); // la galería pública se actualiza al momento
 }
 
 // ---------------------------------------------------------------------------

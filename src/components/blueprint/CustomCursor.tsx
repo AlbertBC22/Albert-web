@@ -27,7 +27,8 @@ const pad = (n: number) => String(Math.round(n)).padStart(4, "0");
 // Cursor de replanteo: cruz fina con lectura de coordenadas. Sobre enlaces y botones se
 // convierte en un marco de corchetes; sobre fotos, en un marco con "VER".
 // Estilos en globals.css → .bp-cursor.
-export default function CustomCursor() {
+// nested: segunda instancia dentro de un <dialog>; la de la página gestiona la clase de <html>.
+export default function CustomCursor({ nested = false }: { nested?: boolean }) {
   const t = useTranslations("Cursor");
   const enabled = useSyncExternalStore(subscribe, isEnabled, () => false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -38,7 +39,7 @@ export default function CustomCursor() {
     const root = rootRef.current;
     if (!enabled || !root) return;
     const html = document.documentElement;
-    html.classList.add("has-custom-cursor");
+    if (!nested) html.classList.add("has-custom-cursor");
 
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
@@ -65,9 +66,9 @@ export default function CustomCursor() {
     return () => {
       window.removeEventListener("pointermove", onMove);
       html.removeEventListener("pointerleave", onLeave);
-      html.classList.remove("has-custom-cursor");
+      if (!nested) html.classList.remove("has-custom-cursor");
     };
-  }, [enabled]);
+  }, [enabled, nested]);
 
   if (!enabled) return null;
 

@@ -5,18 +5,12 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 7 — Galería de fotografía (pendiente de aprobar el plan)
-- **Último paso completado**: Fase 6 — Panel de administración
-- **Siguiente paso**: Claude presenta el plan de la Fase 7
-- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 7
+- **Fase actual**: Fase 7 — Galería de fotografía (implementada, sin push)
+- **Último paso completado**: galería pública, en local
+- **Siguiente paso**: push, PR y revisión de la preview; después, Fase 8
+- **Esperando a Albert**: revisar la galería y confirmar el push; corregir el contenido de "Valencia 2026" antes del merge
 
-Avance de la Fase 6 (pasos de `docs/PLAN.md`):
-
-- ☑ 1. Login, logout y protección del panel
-- ☑ 2. Álbumes
-- ☑ 3. Fotos
-- ☑ 4. Proyectos
-- ☑ 5. Mensajes (marcar como leído y borrar, por probar con mensajes reales en la Fase 9)
+Pendiente de la Fase 6: marcar como leído y borrar mensajes se prueban en la Fase 9, cuando haya mensajes reales.
 
 ## Estado por fase
 
@@ -31,7 +25,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
 | 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
-| 7 | Galería de fotografía | ☐ | | |
+| 7 | Galería de fotografía | ◐ | `fase-07-galeria` | |
 | 8 | Proyectos | ☐ | | |
 | 9 | Contacto | ☐ | | |
 | 10 | Pulido y publicación | ☐ | | |
@@ -97,6 +91,12 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | La ficha técnica de cada foto se puede editar en el panel | Las fotos de carrete escaneadas traen el escáner como cámara; así se corrige sin volver a subirlas |
 | 2026-11-02 | Fase 6: Albert no revisa la ficha técnica ni la preview del PR #8; se sigue salvo error | Petición de Albert |
 | 2026-11-02 | Portada de proyecto: se añade tras crearlo, en `projects/{id}/{uuid}`, con el mismo procesado que las fotos | La ruta necesita el id; sin metadatos en el archivo |
+| 2026-11-02 | Galería en filas justificadas solo con CSS | No recorta las fotos y mantiene el orden del panel |
+| 2026-11-02 | Año del álbum = año de la foto más reciente con fecha; sin fechas, no se muestra | No hay campo de año y no se inventa el dato |
+| 2026-11-02 | Placeholder: marco de plano con el tamaño reservado (sin desenfoque) | Evita una migración y volver a subir las fotos |
+| 2026-11-02 | Lightbox con `<dialog>` nativo y gestos propios; no cambia la URL | Sin dependencias; enlace directo a una foto, al backlog |
+| 2026-11-02 | Álbumes publicados sin fotos ocultos; sin portada elegida, se usa la primera foto | Ninguna lámina vacía ni sin imagen |
+| 2026-11-02 | Lecturas públicas con cliente sin cookies y `use cache` (vida de 1 hora, etiqueta `gallery`) | Páginas estáticas; el panel invalida la caché al guardar |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -114,6 +114,24 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 7 — Galería de fotografía
+- **Hecho**:
+  - `/fotografia` · `/en/photography` (plano AB-03): álbumes como láminas con portada, título, nº de fotos y año; estado vacío "Plano en preparación".
+  - `/fotografia/[slug]`: cabecera del álbum y fotos en filas justificadas con `next/image`.
+  - Revelado con barrido de escáner: una capa se retira detrás de una línea azul, al llegar con el scroll y con la imagen ya cargada.
+  - Lightbox: flechas del teclado, deslizar, botones, Esc, foco atrapado y devuelto a la foto; ficha técnica al lado (debajo en móvil) y cotas con las dimensiones.
+  - El panel invalida la caché de la galería al guardar (`updateTag`).
+- **Archivos creados**: `src/lib/supabase/public.ts`, `src/lib/data/gallery.ts`, `src/components/gallery/{AlbumCard,AlbumGallery,Lightbox}.tsx`, `src/components/motion/ScanReveal.tsx`.
+- **Archivos modificados**: `src/app/[locale]/fotografia/{page.tsx,[slug]/page.tsx}`, `src/app/admin/(panel)/albumes/actions.ts`, `src/components/blueprint/CustomCursor.tsx` (prop `nested`), `src/app/globals.css`, `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Una imagen `loading="lazy"` dentro de un elemento con `clip-path` al 100 % no llega a cargarse, porque el navegador la considera fuera de pantalla. Por eso el escáner retira una capa encima de la foto y no recorta la imagen.
+  - Animar `top` provoca saltos de maquetación: la línea del escáner usa `yPercent`.
+  - El `<dialog>` abierto queda en la capa superior, por encima del cursor personalizado: se monta una segunda instancia dentro (`nested`). La foto abierta no recibe eventos de puntero, para que el cursor no diga "VER".
+  - Un álbum inexistente muestra la página 404 con `noindex`, pero responde 200 porque va dentro de `Suspense` (backlog, Fase 10).
+  - La caché vive en cada despliegue: un cambio desde el panel en local tarda hasta 1 hora en verse en producción. Para que sea inmediato, usar el panel de producción.
+  - Al parar `next start` desde Git Bash, el proceso sigue vivo y sirve archivos de un build antiguo: cerrarlo por puerto desde PowerShell.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright + Edge en 1440 y 360 px, con las fotos reales: CLS 0, sin scroll horizontal, reduced motion sin animaciones, ES y EN, teclado, Esc, foco atrapado y devuelto, deslizar, sin errores de consola. **Sin probar**: el estado vacío en navegador y la invalidación de caché desde el panel (necesita sesión de admin).
 
 ### 2026-11-02 — Fase 6 — Cierre: squash merge
 - **Hecho**: Albert prueba el panel con su sesión y da el visto bueno ("todo parece funcionar correctamente"). Squash merge del PR #8 a `main`.
@@ -405,6 +423,8 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
+- (Fase 10) Un álbum inexistente debería responder 404 y no 200 (ahora lleva `noindex`).
+- Enlace directo a una foto del lightbox; en móvil, que el botón Atrás cierre la foto en vez de salir del álbum.
 - **Revisar el borrado en el panel**: a Albert le parece que no va del todo rápido. Mejorarlo más adelante.
 - **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
 - `AlbumForm` y la ficha de foto usan `<form action>`: si el servidor devuelve un error, se pierde lo escrito. `ProjectForm` ya lo evita.
