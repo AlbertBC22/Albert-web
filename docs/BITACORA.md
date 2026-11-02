@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 8 — Proyectos (implementada, sin push)
-- **Último paso completado**: proyectos públicos, en local; Fase 7 en el PR #9, sin merge
-- **Siguiente paso**: push y PR de la Fase 8; merge de las fases 7 y 8; Fase 9
-- **Esperando a Albert**: confirmar el push y decidir el merge. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
+- **Fase actual**: Fase 9 — Contacto (pendiente de aprobar el plan)
+- **Último paso completado**: fases 7 y 8 integradas en `main`
+- **Siguiente paso**: Claude presenta el plan de la Fase 9
+- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 9. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
 Pendiente de la Fase 6: marcar como leído y borrar mensajes se prueban en la Fase 9, cuando haya mensajes reales.
 
@@ -25,8 +25,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
 | 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
-| 7 | Galería de fotografía | ◐ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (abierto) |
-| 8 | Proyectos | ◐ | `fase-08-proyectos` (desde `fase-07-galeria`) | |
+| 7 | Galería de fotografía | ☑ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (squash merge) |
+| 8 | Proyectos | ☑ | `fase-08-proyectos` (desde `fase-07-galeria`) | [#10](https://github.com/AlbertBC22/Albert-web/pull/10) (squash merge) |
 | 9 | Contacto | ☐ | | |
 | 10 | Pulido y publicación | ☐ | | |
 
@@ -118,6 +118,9 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fases 7 y 8 — Cierre: squash merge
+- **Hecho**: a petición de Albert, squash merge de los PR #9 y #10 a `main`. Los fallos de contenido de proyectos y fotos se ignoran de momento, por decisión suya.
 
 ### 2026-11-02 — Fase 8 — Proyectos públicos
 - **Hecho**:
