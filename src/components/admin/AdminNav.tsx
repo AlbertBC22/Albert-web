@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Secciones del panel. Las que aún no existen se muestran como "pronto" (se activan en
-// los siguientes pasos de la Fase 6).
+// Secciones del panel.
 const ITEMS = [
-  { href: "/admin", label: "Inicio", ready: true },
-  { href: "/admin/albumes", label: "Álbumes y fotos", ready: true },
-  { href: "/admin/proyectos", label: "Proyectos", ready: false },
-  { href: "/admin/mensajes", label: "Mensajes", ready: false },
+  { href: "/admin", label: "Inicio" },
+  { href: "/admin/albumes", label: "Álbumes y fotos" },
+  { href: "/admin/proyectos", label: "Proyectos" },
+  { href: "/admin/mensajes", label: "Mensajes" },
 ];
 
 export default function AdminNav() {
@@ -20,15 +19,6 @@ export default function AdminNav() {
       <ul className="space-y-1">
         {ITEMS.map((item, index) => {
           const index2 = `[${String(index).padStart(2, "0")}]`;
-          if (!item.ready) {
-            return (
-              <li key={item.href} className="label-mono flex gap-2 py-2 text-ink-muted/60">
-                <span>{index2}</span>
-                {item.label}
-                <span className="ml-auto">pronto</span>
-              </li>
-            );
-          }
           const active = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
           return (
             <li key={item.href}>

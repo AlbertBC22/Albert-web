@@ -6,17 +6,17 @@ Las entradas del registro van de la más reciente a la más antigua.
 ## Estado actual
 
 - **Fase actual**: Fase 6 — Panel de administración (⏸ tras los pasos 2–3: álbumes y fotos)
-- **Último paso completado**: pasos 2–3 (álbumes y fotos) probados por Albert con fotos reales y archivos verificados
-- **Siguiente paso**: pasos 4–5 (proyectos y mensajes)
-- **Esperando a Albert**: decidir qué hacer con la ficha técnica de las fotos escaneadas y dar el ok al plan de los pasos 4–5
+- **Último paso completado**: pasos 4–5 (proyectos y mensajes) y ficha técnica editable, implementados
+- **Siguiente paso**: merge del PR #8 y Fase 7 (galería), cuando Albert lo confirme
+- **Esperando a Albert**: probar proyectos y mensajes con su sesión (Claude no puede entrar al panel), decidir el merge y confirmar la Fase 7
 
 Avance de la Fase 6 (pasos de `docs/PLAN.md`):
 
 - ☑ 1. Login, logout y protección del panel
 - ☑ 2. Álbumes
 - ☑ 3. Fotos
-- ☐ 4. Proyectos
-- ☐ 5. Mensajes
+- ◐ 4. Proyectos (implementado; sin probar con sesión de admin)
+- ◐ 5. Mensajes (implementado; sin probar con sesión de admin)
 
 ## Estado por fase
 
@@ -30,7 +30,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
-| 6 | Panel de administración | ⏸ | `fase-06-admin` | |
+| 6 | Panel de administración | ◐ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (abierto) |
 | 7 | Galería de fotografía | ☐ | | |
 | 8 | Proyectos | ☐ | | |
 | 9 | Contacto | ☐ | | |
@@ -94,6 +94,9 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-22 | Texto alternativo provisional al subir ("Fotografía del álbum «…»"), marcado en el panel para revisarlo | El `alt` es obligatorio en la BD y no se conoce al subir |
 | 2026-10-22 | Reordenar con botones ↑ ↓ (renumera 0, 1, 2…) en lugar de arrastrar | Sin dependencias nuevas; suficiente para ≤ 30 fotos |
 | 2026-10-22 | Miniaturas del panel con `next/image` `unoptimized` | No gastar la cuota de optimización de imágenes de Vercel en el panel |
+| 2026-11-02 | La ficha técnica de cada foto se puede editar en el panel | Las fotos de carrete escaneadas traen el escáner como cámara; así se corrige sin volver a subirlas |
+| 2026-11-02 | Fase 6: Albert no revisa la ficha técnica ni la preview del PR #8; se sigue salvo error | Petición de Albert |
+| 2026-11-02 | Portada de proyecto: se añade tras crearlo, en `projects/{id}/{uuid}`, con el mismo procesado que las fotos | La ruta necesita el id; sin metadatos en el archivo |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -111,6 +114,21 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 6 — Pasos 4–5: proyectos y mensajes, y ficha técnica editable
+- **Hecho**:
+  - Albert confirma que fotos está probado y correcto (también reordenar y borrar). PR #8 abierto.
+  - **Ficha técnica** editable en la ficha de cada foto: marca, modelo, objetivo, fecha, focal, apertura, velocidad e ISO. Vacío = no se muestra.
+  - **Proyectos** (`/admin/proyectos`): lista, orden ↑ ↓, publicar / despublicar y alta. **Edición** (`/admin/proyectos/[id]`): todos los campos ES/EN, portada (subir, cambiar, quitar) y borrado (incluida la portada del Storage).
+  - **Mensajes** (`/admin/mensajes`): lista del más reciente al más antiguo, sin leer resaltados, marcar como leído y borrar.
+  - Navegación del panel con todas las secciones activas.
+- **Archivos creados**: `src/app/admin/(panel)/proyectos/{actions.ts,page.tsx,[id]/page.tsx}`, `src/app/admin/(panel)/mensajes/{actions.ts,page.tsx}`, `src/components/admin/{ProjectForm,ProjectCover}.tsx`, `src/lib/admin/forms.ts`, `src/lib/data/{projects,messages,reorder}.ts`.
+- **Archivos modificados**: `src/app/admin/(panel)/albumes/actions.ts` (helpers movidos a `forms.ts` y `reorder.ts`; `updatePhoto` guarda también la ficha), `src/components/admin/{PhotoCard,AlbumForm,AdminNav,fields}.tsx`, `src/app/admin/(panel)/page.tsx`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Sin migraciones: las políticas de la Fase 5 ya cubren proyectos y mensajes.
+  - `ProjectForm` se envía con `onSubmit` porque `<form action>` vacía los campos al terminar, también si hay un error.
+  - Al guardar la ficha, `taken_at` pasa a las 12:00 UTC del día elegido (se pierde la hora del EXIF; la web solo usa el día).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · sin sesión, `/admin/proyectos`, `/admin/proyectos/[id]` y `/admin/mensajes` → 307 a `/admin/login`. **No probado con sesión de admin**: Claude no tiene credenciales, así que ninguna pantalla ni acción nueva se ha ejecutado de verdad.
 
 ### 2026-11-02 — Fase 6 ⏸ — Prueba de Albert y verificación de las fotos subidas
 - **Hecho**: Albert crea el álbum publicado "Valencia 2026" con 5 fotos y elige portada. Verificación con la API pública y descargando los archivos del Storage:
@@ -383,6 +401,8 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
+- **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
+- `AlbumForm` y la ficha de foto usan `<form action>`: si el servidor devuelve un error, se pierde lo escrito. `ProjectForm` ya lo evita.
 - Integración con la API de GitHub para proyectos.
 - Versión en catalán.
 - Dominio propio. Mientras tanto, opción gratuita: añadir un subdominio `.vercel.app` más bonito (p. ej. `albertbatiste.vercel.app`) si está libre.

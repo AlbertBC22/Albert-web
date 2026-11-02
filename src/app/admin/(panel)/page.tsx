@@ -26,9 +26,6 @@ export default async function AdminHomePage() {
           </div>
         ))}
       </dl>
-      <p className="text-ink-muted">
-        Las secciones de proyectos y mensajes se activan en el siguiente paso.
-      </p>
     </div>
   );
 }
