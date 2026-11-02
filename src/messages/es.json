@@ -16,12 +16,6 @@
     "es": "Español",
     "en": "English"
   },
-  "Placeholder": {
-    "notice": "Página en construcción."
-  },
-  "ContactPage": {
-    "title": "Contacto"
-  },
   "NotFoundPage": {
     "title": "Página no encontrada",
     "back": "Volver al inicio"
@@ -170,5 +164,22 @@
     "repo": "Repositorio",
     "live": "Ver la web",
     "back": "Todos los proyectos"
+  },
+  "Contact": {
+    "label": "Plano de contacto",
+    "title": "Contacto",
+    "intro": "Si te interesa mi perfil o quieres proponerme algo, escríbeme.",
+    "name": "Nombre",
+    "email": "Email",
+    "message": "Mensaje",
+    "send": "Enviar mensaje",
+    "sending": "Enviando…",
+    "sentTitle": "Mensaje enviado",
+    "sentText": "Gracias por escribirme. Te responderé en cuanto pueda.",
+    "invalid": "Revisa los datos: hay algún campo vacío o el email no es válido.",
+    "failed": "No se ha podido enviar el mensaje. Inténtalo de nuevo más tarde.",
+    "trap": "No rellenes este campo",
+    "location": "Ubicación",
+    "links": "Enlaces"
   }
 }
