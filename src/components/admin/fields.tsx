@@ -12,7 +12,14 @@ type BaseProps = {
   hint?: string;
 };
 
-export function TextField({ label, name, defaultValue, required, maxLength, hint, pattern }: BaseProps & { pattern?: string }) {
+type TextFieldProps = BaseProps & {
+  pattern?: string;
+  type?: "text" | "number" | "date" | "url";
+  min?: number;
+  step?: number;
+};
+
+export function TextField({ label, name, defaultValue, required, maxLength, hint, pattern, type = "text", min, step }: TextFieldProps) {
   return (
     <label className="block space-y-1.5">
       <span className="label-mono text-ink-muted">
@@ -20,11 +27,14 @@ export function TextField({ label, name, defaultValue, required, maxLength, hint
         {required && <span aria-hidden> *</span>}
       </span>
       <input
+        type={type}
         name={name}
         defaultValue={defaultValue ?? ""}
         required={required}
         maxLength={maxLength}
         pattern={pattern}
+        min={min}
+        step={step}
         className={INPUT}
       />
       {hint && <span className="block text-sm text-ink-muted">{hint}</span>}
@@ -48,6 +58,21 @@ export function TextArea({ label, name, defaultValue, required, maxLength, hint,
         className={INPUT}
       />
       {hint && <span className="block text-sm text-ink-muted">{hint}</span>}
+    </label>
+  );
+}
+
+export function SelectField({ label, name, defaultValue, options }: Pick<BaseProps, "label" | "name" | "defaultValue"> & { options: { value: string; label: string }[] }) {
+  return (
+    <label className="block space-y-1.5">
+      <span className="label-mono text-ink-muted">{label}</span>
+      <select name={name} defaultValue={defaultValue ?? undefined} className={INPUT}>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </label>
   );
 }

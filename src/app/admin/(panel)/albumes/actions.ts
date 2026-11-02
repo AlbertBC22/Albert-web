@@ -3,41 +3,20 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { firstIssue, numberOrNull, slugify, SLUG, text, textOrNull, type FormState } from "@/lib/admin/forms";
 import { requireAdmin } from "@/lib/data/admin";
+import { reorder } from "@/lib/data/reorder";
 import { createClient } from "@/lib/supabase/server";
 import { PHOTOS_BUCKET } from "@/lib/supabase/storage";
 
 // Escrituras del panel para álbumes y fotos. Cada acción comprueba que el usuario es admin
 // (además de la RLS de la base de datos) y valida los datos con zod.
 
-export type FormState = { error: string | null; ok?: boolean };
-
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-// "Viaje a Islandia 2024" → "viaje-a-islandia-2024"
-function slugify(text: string) {
-  return text
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80);
-}
-
 // Errores de la base de datos → mensaje para el panel
 function dbErrorMessage(error: { code?: string; message: string }) {
   if (error.code === "23505") return "Ya existe un álbum con esa URL (slug). Elige otra.";
   if (error.message.startsWith("Se ha alcanzado el límite")) return error.message + ".";
   return "No se ha podido guardar. Revisa los datos e inténtalo de nuevo.";
-}
-
-function firstIssue(error: z.ZodError) {
-  return error.issues[0]?.message ?? "Revisa los datos del formulario.";
-}
-
-function text(formData: FormData, name: string) {
-  return String(formData.get(name) ?? "").trim();
 }
 
 function refresh() {
@@ -136,8 +115,7 @@ export async function deleteAlbum(id: string) {
   redirect("/admin/albumes");
 }
 
-// Sube o baja un álbum en el orden. Renumera todas las posiciones (0, 1, 2…) para que
-// queden limpias aunque hubiera huecos o empates.
+// Sube o baja un álbum en el orden.
 export async function moveAlbum(id: string, direction: "up" | "down") {
   await requireAdmin();
   const supabase = await createClient();
@@ -191,27 +169,45 @@ export async function createPhoto(albumId: string, photo: NewPhoto): Promise<For
   return { error: null, ok: true };
 }
 
-const PhotoTextSchema = z.object({
-  title_es: z.string().max(120),
-  title_en: z.string().max(120),
+const PhotoDetailsSchema = z.object({
+  title_es: z.string().max(120).nullable(),
+  title_en: z.string().max(120).nullable(),
   alt_es: z.string().min(1, "El texto alternativo en español es obligatorio.").max(300),
   alt_en: z.string().min(1, "El texto alternativo en inglés es obligatorio.").max(300),
+  camera_make: z.string().max(80, "La marca es demasiado larga.").nullable(),
+  camera_model: z.string().max(80, "El modelo es demasiado largo.").nullable(),
+  lens: z.string().max(120, "El objetivo es demasiado largo.").nullable(),
+  focal_length_mm: z.number("La focal no es válida.").positive("La focal no es válida.").max(99999, "La focal no es válida.").nullable(),
+  aperture: z.number("La apertura no es válida.").positive("La apertura no es válida.").max(999, "La apertura no es válida.").nullable(),
+  shutter_speed: z.string().max(20, "La velocidad es demasiado larga.").nullable(),
+  iso: z.number("El ISO no es válido.").int("El ISO no es válido.").positive("El ISO no es válido.").nullable(),
+  taken_at: z.iso.date("La fecha no es válida.").nullable(),
 });
 
 export async function updatePhoto(id: string, _prev: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
-  const parsed = PhotoTextSchema.safeParse({
-    title_es: text(formData, "title_es"),
-    title_en: text(formData, "title_en"),
+  const parsed = PhotoDetailsSchema.safeParse({
+    title_es: textOrNull(formData, "title_es"),
+    title_en: textOrNull(formData, "title_en"),
     alt_es: text(formData, "alt_es"),
     alt_en: text(formData, "alt_en"),
+    camera_make: textOrNull(formData, "camera_make"),
+    camera_model: textOrNull(formData, "camera_model"),
+    lens: textOrNull(formData, "lens"),
+    focal_length_mm: numberOrNull(formData, "focal_length_mm"),
+    aperture: numberOrNull(formData, "aperture"),
+    shutter_speed: textOrNull(formData, "shutter_speed"),
+    iso: numberOrNull(formData, "iso"),
+    taken_at: textOrNull(formData, "taken_at"),
   });
   if (!parsed.success) return { error: firstIssue(parsed.error) };
 
+  const { taken_at, ...values } = parsed.data;
   const supabase = await createClient();
   const { error } = await supabase
     .from("photos")
-    .update({ ...parsed.data, title_es: parsed.data.title_es || null, title_en: parsed.data.title_en || null })
+    // Solo importa el día: a las 12:00 UTC sigue siendo el mismo día en Europa
+    .update({ ...values, taken_at: taken_at && `${taken_at}T12:00:00Z` })
     .eq("id", id);
   if (error) return { error: dbErrorMessage(error) };
 
@@ -243,19 +239,4 @@ export async function movePhoto(id: string, direction: "up" | "down") {
     .order("created_at");
   await reorder(supabase, "photos", (data ?? []).map((row) => row.id), id, direction);
   refresh();
-}
-
-// Intercambia `id` con su vecino y guarda las posiciones 0, 1, 2… de toda la lista.
-async function reorder(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  table: "albums" | "photos",
-  ids: string[],
-  id: string,
-  direction: "up" | "down",
-) {
-  const index = ids.indexOf(id);
-  const target = direction === "up" ? index - 1 : index + 1;
-  if (index < 0 || target < 0 || target >= ids.length) return;
-  [ids[index], ids[target]] = [ids[target], ids[index]];
-  await Promise.all(ids.map((rowId, position) => supabase.from(table).update({ position }).eq("id", rowId)));
 }

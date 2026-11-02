@@ -1,8 +1,8 @@
 "use client";
 
 import { useActionState } from "react";
-import type { FormState } from "@/app/admin/(panel)/albumes/actions";
 import { Button } from "@/components/blueprint/Button";
+import type { FormState } from "@/lib/admin/forms";
 import type { Tables } from "@/types/database";
 import { Checkbox, FormMessage, TextArea, TextField } from "./fields";
 
