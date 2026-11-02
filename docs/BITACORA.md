@@ -6,9 +6,17 @@ Las entradas del registro van de la más reciente a la más antigua.
 ## Estado actual
 
 - **Fase actual**: Fase 6 — Panel de administración (⏸ tras los pasos 2–3: álbumes y fotos)
-- **Último paso completado**: gestión de álbumes y subida / edición de fotos (en local)
-- **Siguiente paso**: Albert prueba con 2–3 fotos suyas → verificar que los archivos subidos no llevan metadatos → paso 4–5 (proyectos y mensajes)
-- **Esperando a Albert**: probar álbumes y subida de fotos con su sesión
+- **Último paso completado**: pasos 2–3 (álbumes y fotos) probados por Albert con fotos reales y archivos verificados
+- **Siguiente paso**: pasos 4–5 (proyectos y mensajes)
+- **Esperando a Albert**: decidir qué hacer con la ficha técnica de las fotos escaneadas y dar el ok al plan de los pasos 4–5
+
+Avance de la Fase 6 (pasos de `docs/PLAN.md`):
+
+- ☑ 1. Login, logout y protección del panel
+- ☑ 2. Álbumes
+- ☑ 3. Fotos
+- ☐ 4. Proyectos
+- ☐ 5. Mensajes
 
 ## Estado por fase
 
@@ -103,6 +111,19 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 6 ⏸ — Prueba de Albert y verificación de las fotos subidas
+- **Hecho**: Albert crea el álbum publicado "Valencia 2026" con 5 fotos y elige portada. Verificación con la API pública y descargando los archivos del Storage:
+  - 5 filas y 5 archivos `image/webp` distintos que se descargan bien; 2.500 × 1.657 en el archivo y en la BD; portada válida y del mismo álbum (revisada a ojo, orientación correcta).
+  - Sin EXIF, sin XMP y sin rastro del fabricante en los archivos; sin GPS en la BD.
+- **Archivos modificados**: `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - **Corrección a la entrada del 2026-10-22**: el WebP no está totalmente vacío de metadatos. El navegador añade un perfil de color ICC de 456 bytes, genérico (`sRGB`, "Google Inc. 2016"). No contiene datos personales ni de la foto.
+  - Las fotos son escaneos de carrete: el EXIF indica el escáner (`NORITSU KOKI EZ Controller`) como cámara y no trae objetivo, focal, apertura, velocidad, ISO ni fecha. Pendiente de decisión de Albert, porque la galería lo mostraría como cámara.
+  - Las 5 fotos conservan el `alt` provisional, y `description_es` del álbum está en catalán.
+  - El álbum "Prueba" del seed ya no aparece en la API pública (borrado o despublicado; no se distingue sin sesión de admin).
+  - **No verificado**: si hay archivos huérfanos en el Storage (la clave pública no puede listar el bucket) ni el reordenado y el borrado de fotos (no hay rastro de ellos en los datos). El MCP de Supabase no estaba autorizado en esta sesión.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑
 
 ### 2026-10-22 — Fase 6 ⏸ — Pasos 2–3: álbumes y fotos
 - **Hecho**:
