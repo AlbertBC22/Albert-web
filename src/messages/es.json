@@ -19,12 +19,6 @@
   "Placeholder": {
     "notice": "Página en construcción."
   },
-  "ProjectsPage": {
-    "title": "Proyectos"
-  },
-  "ProjectPage": {
-    "title": "Proyecto: {slug}"
-  },
   "ContactPage": {
     "title": "Contacto"
   },
@@ -157,5 +151,24 @@
       "iso": "ISO",
       "date": "Fecha"
     }
+  },
+  "Projects": {
+    "label": "Plano de proyectos",
+    "title": "Proyectos",
+    "intro": "Proyectos de código en los que he trabajado.",
+    "detailLabel": "Proyecto",
+    "emptyTitle": "Plano en preparación",
+    "emptyText": "Todavía no hay proyectos publicados.",
+    "coverAlt": "Portada del proyecto {title}",
+    "role": "Rol",
+    "period": "Periodo",
+    "status": "Estado",
+    "statusActive": "Activo",
+    "statusClosed": "Cerrado",
+    "present": "actualidad",
+    "stack": "Tecnologías",
+    "repo": "Repositorio",
+    "live": "Ver la web",
+    "back": "Todos los proyectos"
   }
 }

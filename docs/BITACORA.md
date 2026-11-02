@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 7 — Galería de fotografía (implementada, sin push)
-- **Último paso completado**: galería pública, en local
-- **Siguiente paso**: push, PR y revisión de la preview; después, Fase 8
-- **Esperando a Albert**: revisar la galería y confirmar el push; corregir el contenido de "Valencia 2026" antes del merge
+- **Fase actual**: Fase 9 — Contacto (pendiente de aprobar el plan)
+- **Último paso completado**: fases 7 y 8 integradas en `main`
+- **Siguiente paso**: Claude presenta el plan de la Fase 9
+- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 9. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
 Pendiente de la Fase 6: marcar como leído y borrar mensajes se prueban en la Fase 9, cuando haya mensajes reales.
 
@@ -25,8 +25,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
 | 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
-| 7 | Galería de fotografía | ◐ | `fase-07-galeria` | |
-| 8 | Proyectos | ☐ | | |
+| 7 | Galería de fotografía | ☑ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (squash merge) |
+| 8 | Proyectos | ☑ | `fase-08-proyectos` (desde `fase-07-galeria`) | [#10](https://github.com/AlbertBC22/Albert-web/pull/10) (squash merge) |
 | 9 | Contacto | ☐ | | |
 | 10 | Pulido y publicación | ☐ | | |
 
@@ -97,6 +97,10 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | Lightbox con `<dialog>` nativo y gestos propios; no cambia la URL | Sin dependencias; enlace directo a una foto, al backlog |
 | 2026-11-02 | Álbumes publicados sin fotos ocultos; sin portada elegida, se usa la primera foto | Ninguna lámina vacía ni sin imagen |
 | 2026-11-02 | Lecturas públicas con cliente sin cookies y `use cache` (vida de 1 hora, etiqueta `gallery`) | Páginas estáticas; el panel invalida la caché al guardar |
+| 2026-11-02 | Markdown con `react-markdown`; sin imágenes en la descripción | Ignora el HTML incrustado y se renderiza en servidor; las imágenes exigirían resolver alojamiento y texto alternativo |
+| 2026-11-02 | Proyectos: una ficha por fila a todo el ancho; sin portada, solo texto; periodo según las fechas | Llevan más texto que los álbumes y no se inventa nada |
+| 2026-11-02 | La rama de la Fase 8 sale de `fase-07-galeria` | Reutiliza piezas de la Fase 7, aún sin merge |
+| 2026-11-02 | De momento se ignoran los fallos de contenido de proyectos y fotos | Petición de Albert |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -114,6 +118,24 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fases 7 y 8 — Cierre: squash merge
+- **Hecho**: a petición de Albert, squash merge de los PR #9 y #10 a `main`. Los fallos de contenido de proyectos y fotos se ignoran de momento, por decisión suya.
+
+### 2026-11-02 — Fase 8 — Proyectos públicos
+- **Hecho**:
+  - `/proyectos` · `/en/projects` (plano AB-02): una ficha por fila con portada (si la hay), título, resumen, periodo, estado, stack y enlaces; estado vacío. Las fichas aparecen con el barrido `wipe` y las portadas, con el escáner.
+  - `/proyectos/[slug]`: portada, descripción en markdown y ficha técnica al lado (debajo en móvil).
+  - El panel invalida la caché de proyectos al guardar (`updateTag`).
+  - `.js [data-card]` fija el estado inicial del `wipe` en CSS, para que la ficha no se vea un instante antes de animar. También afecta a los intereses de la principal (comprobado).
+- **Dependencias nuevas**: `react-markdown` (aprobada por Albert).
+- **Archivos creados**: `src/lib/data/public-projects.ts`, `src/components/projects/{ProjectCard,ProjectSpecs,Markdown}.tsx`.
+- **Archivos modificados**: `src/app/[locale]/proyectos/{page.tsx,[slug]/page.tsx}`, `src/app/admin/(panel)/proyectos/actions.ts`, `src/app/globals.css`, `src/messages/{es,en}.json`, `package.json`, `package-lock.json`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - **Incidencia**: durante las pruebas, Claude ejecutó `rm -rf .next` con el `npm run dev` de Albert activo, y ese servidor pasó a responder 500. Se arregla reiniciándolo. No afecta al código. **No borrar `.next` sin comprobar antes que no hay un `next dev` en marcha.**
+  - `next build` con `next dev` activo puede avisar de `EBUSY` en la caché; no impide el build.
+  - Para probar la portada y el markdown sin escribir en la BD se usaron datos simulados de forma temporal; los archivos quedaron restaurados.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright + Edge en 1440 y 360 px con el proyecto real y con uno simulado: CLS 0, sin scroll horizontal, ES y EN, reduced motion, sin errores de consola; `<script>`, HTML e imágenes del markdown no se ejecutan ni se renderizan, y el enlace `javascript:` pierde su destino. **Sin probar**: el estado vacío, una portada subida de verdad al bucket `projects` en la web pública y la invalidación de caché desde el panel.
 
 ### 2026-11-02 — Fase 7 — Galería de fotografía
 - **Hecho**:
@@ -423,7 +445,7 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
-- (Fase 10) Un álbum inexistente debería responder 404 y no 200 (ahora lleva `noindex`).
+- (Fase 10) Un álbum o proyecto inexistente debería responder 404 y no 200 (ahora lleva `noindex`).
 - Enlace directo a una foto del lightbox; en móvil, que el botón Atrás cierre la foto en vez de salir del álbum.
 - **Revisar el borrado en el panel**: a Albert le parece que no va del todo rápido. Mejorarlo más adelante.
 - **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
