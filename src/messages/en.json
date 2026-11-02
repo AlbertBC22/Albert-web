@@ -16,12 +16,6 @@
     "es": "Español",
     "en": "English"
   },
-  "Placeholder": {
-    "notice": "Page under construction."
-  },
-  "ContactPage": {
-    "title": "Contact"
-  },
   "NotFoundPage": {
     "title": "Page not found",
     "back": "Back to home"
@@ -170,5 +164,22 @@
     "repo": "Repository",
     "live": "Visit the site",
     "back": "All projects"
+  },
+  "Contact": {
+    "label": "Contact sheet",
+    "title": "Contact",
+    "intro": "If you are interested in my profile or want to propose something, write to me.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "sentTitle": "Message sent",
+    "sentText": "Thanks for writing. I will reply as soon as I can.",
+    "invalid": "Please check your details: a field is empty or the email is not valid.",
+    "failed": "The message could not be sent. Please try again later.",
+    "trap": "Do not fill in this field",
+    "location": "Location",
+    "links": "Links"
   }
 }

@@ -5,12 +5,12 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 9 — Contacto (pendiente de aprobar el plan)
-- **Último paso completado**: fases 7 y 8 integradas en `main`
-- **Siguiente paso**: Claude presenta el plan de la Fase 9
-- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 9. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
+- **Fase actual**: Fase 9 — Contacto (implementada, sin push)
+- **Último paso completado**: formulario de contacto, en local; fases 7 y 8 en `main`
+- **Siguiente paso**: push, PR y merge; después, Fase 10
+- **Esperando a Albert**: comprobar en `/admin/mensajes` que hay exactamente 1 mensaje de prueba, marcarlo como leído y borrarlo; confirmar el push. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
-Pendiente de la Fase 6: marcar como leído y borrar mensajes se prueban en la Fase 9, cuando haya mensajes reales.
+Pendiente de la Fase 6: Albert prueba marcar como leído y borrar con el mensaje de prueba de la Fase 9.
 
 ## Estado por fase
 
@@ -27,7 +27,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
 | 7 | Galería de fotografía | ☑ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (squash merge) |
 | 8 | Proyectos | ☑ | `fase-08-proyectos` (desde `fase-07-galeria`) | [#10](https://github.com/AlbertBC22/Albert-web/pull/10) (squash merge) |
-| 9 | Contacto | ☐ | | |
+| 9 | Contacto | ◐ | `fase-09-contacto` | |
 | 10 | Pulido y publicación | ☐ | | |
 
 ## Decisiones tomadas
@@ -101,6 +101,10 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | Proyectos: una ficha por fila a todo el ancho; sin portada, solo texto; periodo según las fechas | Llevan más texto que los álbumes y no se inventa nada |
 | 2026-11-02 | La rama de la Fase 8 sale de `fase-07-galeria` | Reutiliza piezas de la Fase 7, aún sin merge |
 | 2026-11-02 | De momento se ignoran los fallos de contenido de proyectos y fotos | Petición de Albert |
+| 2026-11-02 | Antispam: si salta (campo trampa o menos de 3 s), se responde como si se hubiera enviado y no se guarda | El bot no aprende qué lo delató |
+| 2026-11-02 | El tiempo mínimo se mide en el navegador, no comparando con la hora del servidor | Con el reloj del visitante mal ajustado se descartarían mensajes reales en silencio. Ajuste a lo aprobado, comunicado a Albert |
+| 2026-11-02 | Sin límite de envíos por IP | Necesitaría guardar datos de visitantes; el captcha sigue en el backlog |
+| 2026-11-02 | Tras enviar, confirmación en lugar del formulario; al lado, ficha con ubicación, LinkedIn y GitHub | Evita duplicados; otras vías sin publicar datos privados |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -118,6 +122,16 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 9 — Contacto
+- **Hecho**:
+  - `/contacto` · `/en/contact` (plano AB-04): formulario con nombre, email y mensaje; al lado, ficha con ubicación, LinkedIn y GitHub.
+  - Server Action con zod que guarda en `contact_messages` con el cliente público (la RLS solo permite añadir).
+  - Antispam: campo trampa, 3 s mínimos y límites de longitud. Mensajes de éxito y error en ES y EN; lo escrito se conserva si hay un error.
+- **Archivos creados**: `src/app/[locale]/contacto/actions.ts`, `src/components/contact/ContactForm.tsx`.
+- **Archivos modificados**: `src/app/[locale]/contacto/page.tsx`, `src/components/admin/fields.tsx` (tipo email y `autoComplete`), `src/messages/{es,en}.json`, `docs/BITACORA.md`.
+- **Problemas / notas**: un visitante puede leer su confirmación aunque el antispam haya descartado el envío, así que la prueba de que se guarda o se descarta es el panel. Se envió 1 mensaje real de prueba, con permiso de Albert, a la base de datos de producción.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · Playwright + Edge: campos vacíos bloqueados y sin datos en la URL, la trampa fuera de pantalla y del orden de tabulación, trampa rellena y envío rápido con confirmación, error del servidor conservando lo escrito, ES y EN, 360 px sin scroll horizontal, sin errores de consola. **Pendiente**: Albert confirma en el panel que solo llegó 1 mensaje.
 
 ### 2026-11-02 — Fases 7 y 8 — Cierre: squash merge
 - **Hecho**: a petición de Albert, squash merge de los PR #9 y #10 a `main`. Los fallos de contenido de proyectos y fotos se ignoran de momento, por decisión suya.

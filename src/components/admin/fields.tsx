@@ -1,4 +1,4 @@
-// Campos de formulario del panel (sin estado: sirven en componentes de servidor y de cliente).
+// Campos de formulario del panel y del contacto (sin estado: sirven en componentes de servidor y de cliente).
 
 const INPUT =
   "block w-full border border-line bg-paper px-3 py-2 outline-none transition-colors focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-ink";
@@ -14,12 +14,13 @@ type BaseProps = {
 
 type TextFieldProps = BaseProps & {
   pattern?: string;
-  type?: "text" | "number" | "date" | "url";
+  type?: "text" | "number" | "date" | "url" | "email";
+  autoComplete?: string;
   min?: number;
   step?: number;
 };
 
-export function TextField({ label, name, defaultValue, required, maxLength, hint, pattern, type = "text", min, step }: TextFieldProps) {
+export function TextField({ label, name, defaultValue, required, maxLength, hint, pattern, type = "text", min, step, autoComplete }: TextFieldProps) {
   return (
     <label className="block space-y-1.5">
       <span className="label-mono text-ink-muted">
@@ -35,6 +36,7 @@ export function TextField({ label, name, defaultValue, required, maxLength, hint
         pattern={pattern}
         min={min}
         step={step}
+        autoComplete={autoComplete}
         className={INPUT}
       />
       {hint && <span className="block text-sm text-ink-muted">{hint}</span>}
