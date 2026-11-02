@@ -5,10 +5,18 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 5 — Supabase (cerrada en local, pendiente de PR)
-- **Último paso completado**: esquema, RLS, Storage, datos de prueba, usuario admin y pruebas de seguridad
-- **Siguiente paso**: push → PR → squash merge; después, Fase 6 — Panel de administración
-- **Esperando a Albert**: autorizar el push
+- **Fase actual**: Fase 7 — Galería de fotografía (pendiente de aprobar el plan)
+- **Último paso completado**: Fase 6 — Panel de administración
+- **Siguiente paso**: Claude presenta el plan de la Fase 7
+- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 7
+
+Avance de la Fase 6 (pasos de `docs/PLAN.md`):
+
+- ☑ 1. Login, logout y protección del panel
+- ☑ 2. Álbumes
+- ☑ 3. Fotos
+- ☑ 4. Proyectos
+- ☑ 5. Mensajes (marcar como leído y borrar, por probar con mensajes reales en la Fase 9)
 
 ## Estado por fase
 
@@ -21,8 +29,8 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 2 | Sistema de diseño "plano técnico" | ☑ | `fase-02-diseno` | [#3](https://github.com/AlbertBC22/Albert-web/pull/3) (squash merge) |
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
-| 5 | Supabase: esquema, RLS y storage | ◐ (cerrada en local) | `fase-05-supabase` | |
-| 6 | Panel de administración | ☐ | | |
+| 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
+| 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
 | 7 | Galería de fotografía | ☐ | | |
 | 8 | Proyectos | ☐ | | |
 | 9 | Contacto | ☐ | | |
@@ -78,6 +86,17 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-10-21 | Validación en BD (checks de slugs, longitudes, email, estado, URLs https) y el público solo puede rellenar name/email/message/locale en `contact_messages` | No depender solo de la web |
 | 2026-10-21 | El `user_id` del admin se inserta a mano (no en el repo) | Repo público |
 | 2026-10-21 | Fotos de prueba del álbum "Prueba": se suben en la Fase 6 desde el panel | Sin clave secreta no se puede subir a Storage desde fuera; así se prueba el flujo real de EXIF |
+| 2026-10-21 | Panel: layout raíz propio (`src/app/admin`, solo ES, `noindex`) con `instant = false`: se resuelve en el servidor en cada petición | Panel privado: sin shell estático que pre-renderizar; evita envolver todo en Suspense |
+| 2026-10-21 | Doble barrera: el proxy exige sesión en `/admin/*` (salvo el login) y `requireAdmin()` comprueba en servidor que es admin | El proxy no basta por sí solo; la comprobación real va en servidor |
+| 2026-10-21 | Política "Leer la propia fila de admin" (migración 006) para que la web sepa si el usuario es admin | La alternativa (exponer `is_admin` por la API) amplía la superficie |
+| 2026-10-21 | Login con Server Action + zod; mensajes de error genéricos; se conserva el email tras un error | Seguridad y comodidad |
+| 2026-10-22 | Fotos: se suben desde el navegador directamente al Storage (sesión del admin + RLS) y la fila se guarda con una Server Action validada | Las Server Actions tienen un límite de cuerpo de ~1 MB; las fotos pesan más |
+| 2026-10-22 | Texto alternativo provisional al subir ("Fotografía del álbum «…»"), marcado en el panel para revisarlo | El `alt` es obligatorio en la BD y no se conoce al subir |
+| 2026-10-22 | Reordenar con botones ↑ ↓ (renumera 0, 1, 2…) en lugar de arrastrar | Sin dependencias nuevas; suficiente para ≤ 30 fotos |
+| 2026-10-22 | Miniaturas del panel con `next/image` `unoptimized` | No gastar la cuota de optimización de imágenes de Vercel en el panel |
+| 2026-11-02 | La ficha técnica de cada foto se puede editar en el panel | Las fotos de carrete escaneadas traen el escáner como cámara; así se corrige sin volver a subirlas |
+| 2026-11-02 | Fase 6: Albert no revisa la ficha técnica ni la preview del PR #8; se sigue salvo error | Petición de Albert |
+| 2026-11-02 | Portada de proyecto: se añade tras crearlo, en `projects/{id}/{uuid}`, con el mismo procesado que las fotos | La ruta necesita el id; sin metadatos en el archivo |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -95,6 +114,67 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 6 — Cierre: squash merge
+- **Hecho**: Albert prueba el panel con su sesión y da el visto bueno ("todo parece funcionar correctamente"). Squash merge del PR #8 a `main`.
+- **Problemas / notas**: a Albert el borrado le parece algo lento; queda en el backlog para mejorarlo más adelante. Marcar como leído y borrar mensajes se probarán en la Fase 9, cuando haya formulario de contacto.
+
+### 2026-11-02 — Fase 6 — Pasos 4–5: proyectos y mensajes, y ficha técnica editable
+- **Hecho**:
+  - Albert confirma que fotos está probado y correcto (también reordenar y borrar). PR #8 abierto.
+  - **Ficha técnica** editable en la ficha de cada foto: marca, modelo, objetivo, fecha, focal, apertura, velocidad e ISO. Vacío = no se muestra.
+  - **Proyectos** (`/admin/proyectos`): lista, orden ↑ ↓, publicar / despublicar y alta. **Edición** (`/admin/proyectos/[id]`): todos los campos ES/EN, portada (subir, cambiar, quitar) y borrado (incluida la portada del Storage).
+  - **Mensajes** (`/admin/mensajes`): lista del más reciente al más antiguo, sin leer resaltados, marcar como leído y borrar.
+  - Navegación del panel con todas las secciones activas.
+- **Archivos creados**: `src/app/admin/(panel)/proyectos/{actions.ts,page.tsx,[id]/page.tsx}`, `src/app/admin/(panel)/mensajes/{actions.ts,page.tsx}`, `src/components/admin/{ProjectForm,ProjectCover}.tsx`, `src/lib/admin/forms.ts`, `src/lib/data/{projects,messages,reorder}.ts`.
+- **Archivos modificados**: `src/app/admin/(panel)/albumes/actions.ts` (helpers movidos a `forms.ts` y `reorder.ts`; `updatePhoto` guarda también la ficha), `src/components/admin/{PhotoCard,AlbumForm,AdminNav,fields}.tsx`, `src/app/admin/(panel)/page.tsx`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Sin migraciones: las políticas de la Fase 5 ya cubren proyectos y mensajes.
+  - `ProjectForm` se envía con `onSubmit` porque `<form action>` vacía los campos al terminar, también si hay un error.
+  - Al guardar la ficha, `taken_at` pasa a las 12:00 UTC del día elegido (se pierde la hora del EXIF; la web solo usa el día).
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · sin sesión, `/admin/proyectos`, `/admin/proyectos/[id]` y `/admin/mensajes` → 307 a `/admin/login`. **No probado con sesión de admin**: Claude no tiene credenciales, así que ninguna pantalla ni acción nueva se ha ejecutado de verdad.
+
+### 2026-11-02 — Fase 6 ⏸ — Prueba de Albert y verificación de las fotos subidas
+- **Hecho**: Albert crea el álbum publicado "Valencia 2026" con 5 fotos y elige portada. Verificación con la API pública y descargando los archivos del Storage:
+  - 5 filas y 5 archivos `image/webp` distintos que se descargan bien; 2.500 × 1.657 en el archivo y en la BD; portada válida y del mismo álbum (revisada a ojo, orientación correcta).
+  - Sin EXIF, sin XMP y sin rastro del fabricante en los archivos; sin GPS en la BD.
+- **Archivos modificados**: `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - **Corrección a la entrada del 2026-10-22**: el WebP no está totalmente vacío de metadatos. El navegador añade un perfil de color ICC de 456 bytes, genérico (`sRGB`, "Google Inc. 2016"). No contiene datos personales ni de la foto.
+  - Las fotos son escaneos de carrete: el EXIF indica el escáner (`NORITSU KOKI EZ Controller`) como cámara y no trae objetivo, focal, apertura, velocidad, ISO ni fecha. Pendiente de decisión de Albert, porque la galería lo mostraría como cámara.
+  - Las 5 fotos conservan el `alt` provisional, y `description_es` del álbum está en catalán.
+  - El álbum "Prueba" del seed ya no aparece en la API pública (borrado o despublicado; no se distingue sin sesión de admin).
+  - **No verificado**: si hay archivos huérfanos en el Storage (la clave pública no puede listar el bucket) ni el reordenado y el borrado de fotos (no hay rastro de ellos en los datos). El MCP de Supabase no estaba autorizado en esta sesión.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑
+
+### 2026-10-22 — Fase 6 ⏸ — Pasos 2–3: álbumes y fotos
+- **Hecho**:
+  - Paso 1 cerrado: Albert entra y sale del panel correctamente.
+  - **Álbumes** (`/admin/albumes`): lista con nº de fotos, estado (publicado / borrador), publicar / despublicar y orden ↑ ↓; alta de álbum (títulos y descripciones ES/EN, slug opcional que se genera del título, publicado). **Edición** (`/admin/albumes/[id]`): mismos campos, fotos, portada y borrado del álbum (incluidos sus archivos del Storage).
+  - **Fotos**: subida múltiple arrastrando o eligiendo archivos (JPEG, PNG o WebP). En el navegador: EXIF permitido con `exifr` (`gps: false`), redimensionado a 2.500 px respetando la orientación y re-codificado con canvas a WebP 0,85 (JPEG si el navegador no codifica WebP) → archivo **sin metadatos**. Subida a `photos/{album_id}/{uuid}.webp` y fila guardada con `createPhoto` (zod; si falla, se borra el archivo subido). Contador `N / 30` global y bloqueo al llegar al límite (además del trigger de la BD).
+  - Ficha de cada foto: miniatura, dimensiones, ficha técnica, títulos y textos alternativos ES/EN (con aviso si el alt es el provisional), "Usar de portada", ↑ ↓ y borrar (BD + Storage).
+  - Todas las acciones comprueban `requireAdmin()` además de la RLS.
+- **Dependencias nuevas**: `exifr` (prevista en el stack).
+- **Archivos creados**: `src/app/admin/(panel)/albumes/{actions.ts,page.tsx,[id]/page.tsx}`, `src/components/admin/{AlbumForm,PhotoUploader,PhotoCard,fields,buttons}.tsx`, `src/lib/data/albums.ts`, `src/lib/images/processPhoto.ts`, `src/lib/supabase/storage.ts`.
+- **Archivos modificados**: `src/components/admin/AdminNav.tsx` (Álbumes activo), `src/app/admin/(panel)/page.tsx`, `package.json`, `docs/BITACORA.md`.
+- **Problemas / notas**:
+  - Entre `albums` y `photos` hay dos relaciones (fotos del álbum y portada): las consultas indican `photos!photos_album_id_fkey`.
+  - TypeScript normaliza las uniones de objetos devueltos (añade `error?: undefined`): `parseAlbum` usa un discriminante `ok`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ · prueba del procesado con fotos reales de `exifr` (Pixel con GPS y Canon EOS 1300D): se leen cámara, objetivo, focal, f/, velocidad, ISO y fecha; **nunca GPS**; el WebP resultante (2.500 px) **no contiene ningún metadato**. Pendiente: prueba de Albert con su sesión.
+
+### 2026-10-21 — Fase 6 ⏸ — Paso 1: login, logout y protección del panel
+- **Hecho** (Fase 5 integrada antes: squash merge del PR #7, `59d6114`):
+  - `src/app/admin/` con su propio layout raíz (ES, fuentes, retícula, `noindex`, `instant = false`).
+  - `/admin/login`: formulario (email + contraseña) en un marco de plano; Server Action `signIn` validada con zod; si la cuenta no es admin, cierra la sesión y lo indica.
+  - Proxy: en `/admin/*` refresca la sesión y redirige al login si no la hay (y del login a `/admin` si ya la hay), conservando las cookies.
+  - `src/lib/data/admin.ts`: `getAdmin()` / `requireAdmin()` (comprobación en servidor) y `getDashboardCounts()`.
+  - Armazón del panel (`(panel)/layout.tsx`): navegación lateral (Inicio activo; Álbumes y fotos, Proyectos y Mensajes como "pronto"), email del admin, "Ver la web" y "Cerrar sesión".
+  - Portada: álbumes, fotos N / límite, proyectos y mensajes sin leer.
+  - Migración `20261021173444_admins_read_own.sql` aplicada con el visto bueno de Albert (antes, su login daba "Esta cuenta no tiene acceso al panel", como se esperaba). Probada: el admin ve su fila; otro usuario y el visitante, 0.
+- **Dependencias nuevas**: `zod` (ya prevista en el stack).
+- **Archivos creados**: `src/app/admin/{layout,actions}.tsx|ts`, `src/app/admin/login/page.tsx`, `src/app/admin/(panel)/{layout,page}.tsx`, `src/components/admin/{LoginForm,AdminNav}.tsx`, `src/lib/data/admin.ts`, `supabase/migrations/20261021173444_admins_read_own.sql`.
+- **Archivos modificados**: `src/lib/supabase/proxy.ts`, `package.json`, `docs/BITACORA.md`.
+- **Verificación**: lint ☑ · typecheck ☑ · build ☑ (`/admin` dinámica, `/admin/login` estática) · sin sesión, `/admin` y `/admin/albumes` → 307 a `/admin/login` · login con credenciales falsas → "Email o contraseña incorrectos." · pendiente: login real de Albert.
 
 ### 2026-10-21 — Fase 5 — Supabase: esquema, RLS y Storage
 - **Hecho**:
@@ -325,6 +405,9 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
+- **Revisar el borrado en el panel**: a Albert le parece que no va del todo rápido. Mejorarlo más adelante.
+- **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
+- `AlbumForm` y la ficha de foto usan `<form action>`: si el servidor devuelve un error, se pierde lo escrito. `ProjectForm` ya lo evita.
 - Integración con la API de GitHub para proyectos.
 - Versión en catalán.
 - Dominio propio. Mientras tanto, opción gratuita: añadir un subdominio `.vercel.app` más bonito (p. ej. `albertbatiste.vercel.app`) si está libre.
