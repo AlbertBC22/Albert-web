@@ -418,6 +418,10 @@ html.loader-active {
     clip-path: inset(50% 0 50% 0);
   }
 
+  .js [data-card] {
+    clip-path: inset(0 100% 0 0);
+  }
+
   .js [data-scan-cover] {
     display: block;
   }

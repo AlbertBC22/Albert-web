@@ -1,10 +1,11 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { firstIssue, slugify, SLUG, text, textOrNull, type FormState } from "@/lib/admin/forms";
 import { requireAdmin } from "@/lib/data/admin";
+import { PROJECTS_TAG } from "@/lib/data/public-projects";
 import { reorder } from "@/lib/data/reorder";
 import { createClient } from "@/lib/supabase/server";
 import { PROJECTS_BUCKET } from "@/lib/supabase/storage";
@@ -19,6 +20,7 @@ function dbErrorMessage(error: { code?: string }) {
 
 function refresh() {
   revalidatePath("/admin", "layout");
+  updateTag(PROJECTS_TAG); // la lista pública se actualiza al momento
 }
 
 const HttpsUrl = z.string().max(500, "El enlace es demasiado largo.").regex(/^https:\/\/\S+$/, "Los enlaces deben empezar por https://.");

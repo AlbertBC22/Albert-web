@@ -19,12 +19,6 @@
   "Placeholder": {
     "notice": "Page under construction."
   },
-  "ProjectsPage": {
-    "title": "Projects"
-  },
-  "ProjectPage": {
-    "title": "Project: {slug}"
-  },
   "ContactPage": {
     "title": "Contact"
   },
@@ -157,5 +151,24 @@
       "iso": "ISO",
       "date": "Date"
     }
+  },
+  "Projects": {
+    "label": "Projects sheet",
+    "title": "Projects",
+    "intro": "Code projects I have worked on.",
+    "detailLabel": "Project",
+    "emptyTitle": "Sheet in preparation",
+    "emptyText": "There are no published projects yet.",
+    "coverAlt": "Cover of the project {title}",
+    "role": "Role",
+    "period": "Period",
+    "status": "Status",
+    "statusActive": "Active",
+    "statusClosed": "Closed",
+    "present": "present",
+    "stack": "Technologies",
+    "repo": "Repository",
+    "live": "Visit the site",
+    "back": "All projects"
   }
 }
