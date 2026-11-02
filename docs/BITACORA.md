@@ -5,10 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 9 — Contacto (implementada, sin push)
-- **Último paso completado**: formulario de contacto, en local; fases 7 y 8 en `main`
-- **Siguiente paso**: push, PR y merge; después, Fase 10
-- **Esperando a Albert**: comprobar en `/admin/mensajes` que hay exactamente 1 mensaje de prueba, marcarlo como leído y borrarlo; confirmar el push. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
+- **Fase actual**: Retoque de diseño con Claude Design, antes de la Fase 10
+- **Último paso completado**: Fase 9 — Contacto, en `main`
+- **Siguiente paso**: Albert da las indicaciones del retoque de diseño; después, Fase 10
+- **Esperando a Albert**: indicaciones del retoque; comprobar en `/admin/mensajes` que hay exactamente 1 mensaje de prueba, marcarlo como leído y borrarlo. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
 Pendiente de la Fase 6: Albert prueba marcar como leído y borrar con el mensaje de prueba de la Fase 9.
 
@@ -27,7 +27,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
 | 7 | Galería de fotografía | ☑ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (squash merge) |
 | 8 | Proyectos | ☑ | `fase-08-proyectos` (desde `fase-07-galeria`) | [#10](https://github.com/AlbertBC22/Albert-web/pull/10) (squash merge) |
-| 9 | Contacto | ◐ | `fase-09-contacto` | |
+| 9 | Contacto | ☑ | `fase-09-contacto` | [#11](https://github.com/AlbertBC22/Albert-web/pull/11) (squash merge) |
 | 10 | Pulido y publicación | ☐ | | |
 
 ## Decisiones tomadas
@@ -105,6 +105,7 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | El tiempo mínimo se mide en el navegador, no comparando con la hora del servidor | Con el reloj del visitante mal ajustado se descartarían mensajes reales en silencio. Ajuste a lo aprobado, comunicado a Albert |
 | 2026-11-02 | Sin límite de envíos por IP | Necesitaría guardar datos de visitantes; el captcha sigue en el backlog |
 | 2026-11-02 | Tras enviar, confirmación en lugar del formulario; al lado, ficha con ubicación, LinkedIn y GitHub | Evita duplicados; otras vías sin publicar datos privados |
+| 2026-11-02 | El retoque de diseño se hace antes de la Fase 10 y con Claude Design | Decisión de Albert; antes estaba previsto para el final |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -122,6 +123,9 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 9 — Cierre: squash merge
+- **Hecho**: a petición de Albert, squash merge del PR #11 a `main`. Sigue pendiente su comprobación en el panel.
 
 ### 2026-11-02 — Fase 9 — Contacto
 - **Hecho**:
