@@ -418,6 +418,10 @@ html.loader-active {
     clip-path: inset(50% 0 50% 0);
   }
 
+  .js [data-scan-cover] {
+    display: block;
+  }
+
   .js :is([data-hero-fade], [data-hero-corner]) {
     visibility: hidden;
     opacity: 0;

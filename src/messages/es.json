@@ -25,12 +25,6 @@
   "ProjectPage": {
     "title": "Proyecto: {slug}"
   },
-  "PhotographyPage": {
-    "title": "Fotografía"
-  },
-  "AlbumPage": {
-    "title": "Álbum: {slug}"
-  },
   "ContactPage": {
     "title": "Contacto"
   },
@@ -136,6 +130,32 @@
     "planned": {
       "label": "Formación prevista",
       "title": "Formación prevista"
+    }
+  },
+  "Gallery": {
+    "label": "Plano de fotografía",
+    "title": "Fotografía",
+    "intro": "Mi gran afición, ordenada por álbumes.",
+    "albumLabel": "Álbum",
+    "emptyTitle": "Plano en preparación",
+    "emptyText": "Todavía no hay álbumes publicados.",
+    "photosLabel": "Fotos",
+    "yearLabel": "Año",
+    "photoCount": "{count, plural, one {# foto} other {# fotos}}",
+    "back": "Todos los álbumes",
+    "lightbox": {
+      "position": "Foto {current} de {total}",
+      "previous": "Foto anterior",
+      "next": "Foto siguiente",
+      "close": "Cerrar",
+      "specs": "Ficha técnica",
+      "camera": "Cámara",
+      "lens": "Objetivo",
+      "focal": "Focal",
+      "aperture": "Apertura",
+      "shutter": "Velocidad",
+      "iso": "ISO",
+      "date": "Fecha"
     }
   }
 }

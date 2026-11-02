@@ -25,12 +25,6 @@
   "ProjectPage": {
     "title": "Project: {slug}"
   },
-  "PhotographyPage": {
-    "title": "Photography"
-  },
-  "AlbumPage": {
-    "title": "Album: {slug}"
-  },
   "ContactPage": {
     "title": "Contact"
   },
@@ -136,6 +130,32 @@
     "planned": {
       "label": "Planned training",
       "title": "Planned training"
+    }
+  },
+  "Gallery": {
+    "label": "Photography sheet",
+    "title": "Photography",
+    "intro": "My great hobby, organised into albums.",
+    "albumLabel": "Album",
+    "emptyTitle": "Sheet in preparation",
+    "emptyText": "There are no published albums yet.",
+    "photosLabel": "Photos",
+    "yearLabel": "Year",
+    "photoCount": "{count, plural, one {# photo} other {# photos}}",
+    "back": "All albums",
+    "lightbox": {
+      "position": "Photo {current} of {total}",
+      "previous": "Previous photo",
+      "next": "Next photo",
+      "close": "Close",
+      "specs": "Technical sheet",
+      "camera": "Camera",
+      "lens": "Lens",
+      "focal": "Focal length",
+      "aperture": "Aperture",
+      "shutter": "Shutter speed",
+      "iso": "ISO",
+      "date": "Date"
     }
   }
 }
