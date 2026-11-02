@@ -5,18 +5,18 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Fase 6 — Panel de administración (⏸ tras los pasos 2–3: álbumes y fotos)
-- **Último paso completado**: pasos 4–5 (proyectos y mensajes) y ficha técnica editable, implementados
-- **Siguiente paso**: merge del PR #8 y Fase 7 (galería), cuando Albert lo confirme
-- **Esperando a Albert**: probar proyectos y mensajes con su sesión (Claude no puede entrar al panel), decidir el merge y confirmar la Fase 7
+- **Fase actual**: Fase 7 — Galería de fotografía (pendiente de aprobar el plan)
+- **Último paso completado**: Fase 6 — Panel de administración
+- **Siguiente paso**: Claude presenta el plan de la Fase 7
+- **Esperando a Albert**: ok al plan y a las decisiones de la Fase 7
 
 Avance de la Fase 6 (pasos de `docs/PLAN.md`):
 
 - ☑ 1. Login, logout y protección del panel
 - ☑ 2. Álbumes
 - ☑ 3. Fotos
-- ◐ 4. Proyectos (implementado; sin probar con sesión de admin)
-- ◐ 5. Mensajes (implementado; sin probar con sesión de admin)
+- ☑ 4. Proyectos
+- ☑ 5. Mensajes (marcar como leído y borrar, por probar con mensajes reales en la Fase 9)
 
 ## Estado por fase
 
@@ -30,7 +30,7 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 3 | Página principal (scroll) | ☑ | `fase-03-principal` | [#4](https://github.com/AlbertBC22/Albert-web/pull/4) (squash merge) |
 | 4 | Formación | ☑ | `fase-04-formacion` | [#5](https://github.com/AlbertBC22/Albert-web/pull/5) (squash merge) |
 | 5 | Supabase: esquema, RLS y storage | ☑ | `fase-05-supabase` | [#7](https://github.com/AlbertBC22/Albert-web/pull/7) (squash merge) |
-| 6 | Panel de administración | ◐ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (abierto) |
+| 6 | Panel de administración | ☑ | `fase-06-admin` | [#8](https://github.com/AlbertBC22/Albert-web/pull/8) (squash merge) |
 | 7 | Galería de fotografía | ☐ | | |
 | 8 | Proyectos | ☐ | | |
 | 9 | Contacto | ☐ | | |
@@ -114,6 +114,10 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-02 — Fase 6 — Cierre: squash merge
+- **Hecho**: Albert prueba el panel con su sesión y da el visto bueno ("todo parece funcionar correctamente"). Squash merge del PR #8 a `main`.
+- **Problemas / notas**: a Albert el borrado le parece algo lento; queda en el backlog para mejorarlo más adelante. Marcar como leído y borrar mensajes se probarán en la Fase 9, cuando haya formulario de contacto.
 
 ### 2026-11-02 — Fase 6 — Pasos 4–5: proyectos y mensajes, y ficha técnica editable
 - **Hecho**:
@@ -401,6 +405,7 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
+- **Revisar el borrado en el panel**: a Albert le parece que no va del todo rápido. Mejorarlo más adelante.
 - **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
 - `AlbumForm` y la ficha de foto usan `<form action>`: si el servidor devuelve un error, se pierde lo escrito. `ProjectForm` ya lo evita.
 - Integración con la API de GitHub para proyectos.
