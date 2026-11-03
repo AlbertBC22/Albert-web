@@ -8,7 +8,7 @@ Las entradas del registro van de la más reciente a la más antigua.
 - **Fase actual**: Fase 10 — Rediseño con Claude Design
 - **Último paso completado**: línea base de rendimiento medida (paso 1 de la Fase 10)
 - **Siguiente paso**: `/design-sync`
-- **Esperando a Albert**: ok a los cambios de la documentación y a la línea base. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
+- **Esperando a Albert**: lanzar `/design-sync`. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
 ## Estado por fase
 
@@ -108,6 +108,7 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | El retoque de diseño se hace antes de la Fase 10 y con Claude Design | Decisión de Albert; antes estaba previsto para el final |
 | 2026-11-03 | Presupuesto de rendimiento en `CLAUDE.md` §8; al cerrar cada fase se compara con la línea base | Decisión de Albert |
 | 2026-11-03 | Fase 11 aparte para el 3D, con React Three Fiber como propuesta; three.js nunca en la carga inicial | Decisión de Albert; las dependencias se confirman al empezar la fase |
+| 2026-11-03 | Una página que no cumple el presupuesto no se da por terminada: se aligera o Albert acepta la excepción, anotada con su motivo. Sin límite de peso de JS | Decisión de Albert: tener en cuenta el rendimiento sin quitarle la última palabra sobre el diseño |
 | 2026-11-03 | Fases renumeradas por orden: 10 Rediseño, 11 3D, 12 Pulido y publicación | Decisión de Albert. En las entradas anteriores a esta fecha, "Fase 10" significa el pulido, ahora Fase 12 |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
@@ -170,7 +171,7 @@ Plantilla de entrada (copiar arriba del todo):
   - El elemento LCP de fotografía y del álbum es una imagen con `loading="lazy"`.
   - La accesibilidad de 96 en la principal viene de `aria-prohibited-attr`: un `aria-label` en párrafos `<p>`, probablemente puesto al partir el texto con SplitText. No se ha confirmado el origen.
   - Los scripts de medida están fuera del repo.
-- **Pendiente**: ok de Albert a estos cambios; después, `/design-sync`.
+- **Pendiente**: `/design-sync`, que lanza Albert.
 - **Verificación**: solo documentación y un comentario de código: lint — · typecheck — · build —
 
 ### 2026-11-02 — Fase 9 — Cierre: squash merge
