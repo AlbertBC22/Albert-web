@@ -195,7 +195,31 @@ Ruta `/admin`, solo español, con el mismo estilo de plano en versión sobria. P
 
 ---
 
-## Fase 10 — Pulido y publicación
+## Fase 10 — Rediseño con Claude Design
+
+1. **Línea base**: Lighthouse en móvil de cada página pública en producción y peso del JS por ruta, anotados en `docs/BITACORA.md`. ⏸
+2. **`/design-sync`**: sincronizar el sistema de diseño actual (tokens y componentes) con un proyecto de Claude Design. ⏸
+3. **Diseño página a página en Claude Design**: una página cada vez; Albert aprueba cada una antes de pasar a la siguiente. ⏸
+4. **Handoff**: traer al repo lo aprobado y listar, por página, qué componentes cambian y qué dependencias harían falta. ⏸
+5. **Implementación por página**: una página cada vez. Cada una se cierra con el protocolo de `CLAUDE.md` §2 y se compara con la línea base. ⏸
+
+**Terminado cuando**: todas las páginas están implementadas, Albert da el visto bueno y se cumple el presupuesto de rendimiento (`CLAUDE.md` §8).
+
+---
+
+## Fase 11 — 3D
+
+Fase aparte, después del rediseño y antes del pulido final. **Propuesta**: React Three Fiber (`three`, `@react-three/fiber`). Las dependencias y qué elementos llevan 3D se confirman con Albert al empezar la fase.
+
+- three.js nunca en la carga inicial: se carga bajo demanda, en una parte separada del JS.
+- Alternativa estática con `prefers-reduced-motion` y si el navegador no puede mostrar 3D.
+- Se mide antes y después de cada elemento 3D, contra la línea base.
+
+**Terminado cuando**: Albert da el visto bueno en producción y se cumple el presupuesto de rendimiento (`CLAUDE.md` §8).
+
+---
+
+## Fase 12 — Pulido y publicación
 
 - SEO: metadata por página y por idioma, `hreflang`, imágenes Open Graph generadas con estilo de plano, `sitemap.xml` y `robots.txt` (excluir `/admin` y `/_plano`).
 - Página 404 con estilo de plano ("Cota fuera de plano").

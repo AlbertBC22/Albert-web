@@ -162,3 +162,11 @@ npm run lint
 npm run typecheck  # tsc --noEmit (crear el script en la Fase 1)
 npm run build
 ```
+
+## 8. Presupuesto de rendimiento
+
+- **Lighthouse en móvil ≥ 90** en todas las páginas.
+- **LCP < 2,5 s**, **CLS < 0,1**, **INP < 200 ms**.
+- **three.js nunca en la carga inicial**.
+
+Al cerrar cada fase, compara con la línea base anotada en `docs/BITACORA.md`: mismas páginas y mismo método. Si algo empeora o se sale del presupuesto, dilo en el informe de cierre.
