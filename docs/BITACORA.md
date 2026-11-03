@@ -5,12 +5,10 @@ Las entradas del registro van de la más reciente a la más antigua.
 
 ## Estado actual
 
-- **Fase actual**: Retoque de diseño con Claude Design, antes de la Fase 10
-- **Último paso completado**: Fase 9 — Contacto, en `main`
-- **Siguiente paso**: Albert da las indicaciones del retoque de diseño; después, Fase 10
-- **Esperando a Albert**: indicaciones del retoque; comprobar en `/admin/mensajes` que hay exactamente 1 mensaje de prueba, marcarlo como leído y borrarlo. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
-
-Pendiente de la Fase 6: Albert prueba marcar como leído y borrar con el mensaje de prueba de la Fase 9.
+- **Fase actual**: Fase 10 — Rediseño con Claude Design
+- **Último paso completado**: línea base de rendimiento medida (paso 1 de la Fase 10)
+- **Siguiente paso**: `/design-sync`
+- **Esperando a Albert**: lanzar `/design-sync`. Por decisión suya, los fallos de contenido de proyectos y fotos se ignoran de momento
 
 ## Estado por fase
 
@@ -28,7 +26,9 @@ Leyenda: ☐ pendiente · ◐ en curso · ⏸ parada en punto de control · ☑ 
 | 7 | Galería de fotografía | ☑ | `fase-07-galeria` | [#9](https://github.com/AlbertBC22/Albert-web/pull/9) (squash merge) |
 | 8 | Proyectos | ☑ | `fase-08-proyectos` (desde `fase-07-galeria`) | [#10](https://github.com/AlbertBC22/Albert-web/pull/10) (squash merge) |
 | 9 | Contacto | ☑ | `fase-09-contacto` | [#11](https://github.com/AlbertBC22/Albert-web/pull/11) (squash merge) |
-| 10 | Pulido y publicación | ☐ | | |
+| 10 | Rediseño con Claude Design | ◐ | `fase-10-rediseno` | |
+| 11 | 3D | ☐ | | |
+| 12 | Pulido y publicación | ☐ | | |
 
 ## Decisiones tomadas
 
@@ -106,6 +106,10 @@ Decisiones confirmadas por Albert. No se reabren sin que él lo pida.
 | 2026-11-02 | Sin límite de envíos por IP | Necesitaría guardar datos de visitantes; el captcha sigue en el backlog |
 | 2026-11-02 | Tras enviar, confirmación en lugar del formulario; al lado, ficha con ubicación, LinkedIn y GitHub | Evita duplicados; otras vías sin publicar datos privados |
 | 2026-11-02 | El retoque de diseño se hace antes de la Fase 10 y con Claude Design | Decisión de Albert; antes estaba previsto para el final |
+| 2026-11-03 | Presupuesto de rendimiento en `CLAUDE.md` §8; al cerrar cada fase se compara con la línea base | Decisión de Albert |
+| 2026-11-03 | Fase 11 aparte para el 3D, con React Three Fiber como propuesta; three.js nunca en la carga inicial | Decisión de Albert; las dependencias se confirman al empezar la fase |
+| 2026-11-03 | Una página que no cumple el presupuesto no se da por terminada: se aligera o Albert acepta la excepción, anotada con su motivo. Sin límite de peso de JS | Decisión de Albert: tener en cuenta el rendimiento sin quitarle la última palabra sobre el diseño |
+| 2026-11-03 | Fases renumeradas por orden: 10 Rediseño, 11 3D, 12 Pulido y publicación | Decisión de Albert. En las entradas anteriores a esta fecha, "Fase 10" significa el pulido, ahora Fase 12 |
 | 2026-10-19 | Certificaciones: obtenidas durante el DAM (Monlau FP, 2020–2023); año exacto solo en las MTA (2022), el resto con el periodo; emisor "—" donde no se conoce | Dato de Albert; no inventar emisores |
 | 2026-10-18 | Botones: líneas de construcción nítidas que se pasan de las esquinas + garabato de rotulador azul cielo (trazo de 6 px, pasadas cada ~6 px) en zigzag vertical que rellena **de izquierda a derecha** al hover y remata en una línea horizontal en el borde | Los botones con marcas de esquina le parecían demasiado típicos; ajustes pedidos por Albert |
 
@@ -123,6 +127,52 @@ Plantilla de entrada (copiar arriba del todo):
 - **Pendiente**:
 - **Verificación**: lint ☐ · typecheck ☐ · build ☐
 -->
+
+### 2026-11-03 — Fase 10 ⏸ — Línea base de rendimiento
+- **Hecho**: medida la línea base en producción, sobre `1b87b33`. Añadidas al plan las fases de rediseño y 3D, y renumeradas (10 Rediseño, 11 3D, 12 Pulido); añadido a `CLAUDE.md` el presupuesto de rendimiento. Sin cambios de código.
+- **Método Lighthouse**: Lighthouse 13.6.0 desde la CLI, con su configuración móvil por defecto (simulación de red lenta y CPU 4x), Chrome sin interfaz, desde el equipo de Albert. Tres pasadas seguidas por URL; se anota la mediana. Comando: `lighthouse <url> --output=json --chrome-flags="--headless=new"`.
+- **Método JS**: suma de los scripts que descarga cada página en esas pasadas (auditoría `network-requests`), comprimidos, tal como viajan por la red.
+
+| Página | Rendimiento (mediana; pasadas) | LCP (s) | CLS | TBT (ms) | Accesibilidad / Buenas prácticas / SEO | JS (KB) |
+|---|---|---|---|---|---|---|
+| `/es` | **84** (82/88/84) | **2,53** | 0 | 435 | 96 / 100 / 100 | 212 |
+| `/es/formacion` | 94 (94/95/93) | 0,94 | 0 | 230 | 100 / 100 / 100 | 214 |
+| `/es/proyectos` | 98 (98/97/98) | 0,94 | 0 | 93 | 100 / 100 / 100 | 219 |
+| `/es/proyectos/albert-web` | 96 (97/95/96) | 2,30 | 0 | 99 | 100 / 100 / 100 | 226 |
+| `/es/fotografia` | 94 (94/93/96) | 2,32 | 0 | 124 | 100 / 100 / 100 | 219 |
+| `/es/fotografia/valencia-2026` | 93 (90/93/93) | **2,77** | 0 | 96 | 100 / 100 / 100 | 221 |
+| `/es/contacto` | 99 (99/99/99) | 0,94 | 0 | 96 | 100 / 100 / 100 | 215 |
+| `/en` | **84** (84/82/84) | **2,54** | 0 | 472 | 96 / 100 / 100 | 212 |
+| `/en/education` | 94 (92/95/94) | 0,95 | 0 | 231 | 100 / 100 / 100 | 214 |
+| `/en/projects` | 98 (98/97/98) | 0,94 | 0 | 118 | 100 / 100 / 100 | 219 |
+| `/en/projects/albert-web` | 96 (96/95/97) | 2,29 | 0 | 101 | 100 / 100 / 100 | 226 |
+| `/en/photography` | 94 (95/94/94) | 2,30 | 0 | 127 | 100 / 100 / 100 | 219 |
+| `/en/photography/valencia-2026` | 90 (86/90/92) | **2,79** | 0 | 182 | 100 / 100 / 100 | 221 |
+| `/en/contact` | 99 (99/99/99) | 0,94 | 0 | 103 | 100 / 100 / 100 | 215 |
+
+  En negrita, lo que se sale del presupuesto.
+- **Reparto del JS**: 10 archivos comunes a todas las páginas suman 212 KB (640 KB sin comprimir en la principal). Lo propio de cada ruta es poco: principal 0 KB, formación 2, proyectos 7, detalle de proyecto 14, fotografía 7, álbum 9, contacto 3. three.js: no está.
+- **INP**: Lighthouse no lo mide al cargar una página. Medida aparte con Playwright (móvil 412 px, CPU 4x, Chrome), solo en las rutas `/es`, tres pasadas y mediana de la peor interacción: tocar el título y abrir y cerrar el menú en todas; además escribir en contacto y abrir y cerrar una foto en el álbum.
+
+| Ruta | INP de laboratorio (ms) |
+|---|---|
+| `/es` | 80 |
+| `/es/formacion` | 56 |
+| `/es/proyectos` | 48 |
+| `/es/proyectos/albert-web` | 48 |
+| `/es/fotografia` | 48 |
+| `/es/fotografia/valencia-2026` | 88 |
+| `/es/contacto` | 56 |
+
+- **Problemas / notas**:
+  - Fuera de presupuesto: la principal (rendimiento 84 y LCP 2,53–2,54 s) y el álbum (LCP 2,77–2,79 s). El resto cumple. CLS es 0 en todas.
+  - Es una medida de laboratorio: orienta y sirve para comparar, pero no son datos de visitantes reales. El INP es una estimación con pocas interacciones.
+  - **El LCP no incluye la pantalla de carga.** En la primera visita de la sesión tarda entre 3,2 y 3,8 s en terminar (con CPU 4x y sin limitar la red), así que el contenido se ve más tarde de lo que indica un LCP de 0,94 s.
+  - El elemento LCP de fotografía y del álbum es una imagen con `loading="lazy"`.
+  - La accesibilidad de 96 en la principal viene de `aria-prohibited-attr`: un `aria-label` en párrafos `<p>`, probablemente puesto al partir el texto con SplitText. No se ha confirmado el origen.
+  - Los scripts de medida están fuera del repo.
+- **Pendiente**: `/design-sync`, que lanza Albert.
+- **Verificación**: solo documentación y un comentario de código: lint — · typecheck — · build —
 
 ### 2026-11-02 — Fase 9 — Cierre: squash merge
 - **Hecho**: a petición de Albert, squash merge del PR #11 a `main`. Sigue pendiente su comprobación en el panel.
@@ -463,7 +513,8 @@ Plantilla de entrada (copiar arriba del todo):
 
 Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 
-- (Fase 10) Un álbum o proyecto inexistente debería responder 404 y no 200 (ahora lleva `noindex`).
+- **Rendimiento (línea base)**: la principal da 84 con TBT de 435–472 ms; el LCP de la principal y del álbum supera 2,5 s; las fotos que son LCP llevan `loading="lazy"`; `aria-label` en `<p>` en la principal. Ver el registro del 2026-11-03.
+- (Fase 12) Un álbum o proyecto inexistente debería responder 404 y no 200 (ahora lleva `noindex`).
 - Enlace directo a una foto del lightbox; en móvil, que el botón Atrás cierre la foto en vez de salir del álbum.
 - **Revisar el borrado en el panel**: a Albert le parece que no va del todo rápido. Mejorarlo más adelante.
 - **Contenido de "Valencia 2026"** (antes de publicar la galería): quitar el escáner de la ficha técnica, escribir los textos alternativos y pasar la descripción en español del catalán al español.
@@ -475,7 +526,7 @@ Ideas y cosas detectadas fuera de alcance. No se hacen sin pedirlo.
 - Captcha invisible si llega spam.
 - Ampliar el panel admin (contenido del CV, estadísticas).
 - Modo oscuro.
-- (Fase 10) 404: conseguir que el contenido venga en el HTML del servidor (ahora se pinta en el cliente por `cacheComponents`).
+- (Fase 12) 404: conseguir que el contenido venga en el HTML del servidor (ahora se pinta en el cliente por `cacheComponents`).
 - (Fase 5/7/8) Las lecturas públicas de Supabase no deben usar `cookies()` (convertiría las páginas en dinámicas): usar un cliente anónimo sin cookies y `use cache`.
 - **Revisión visual de la página principal** cuando esté todo hecho: a Albert hay cosas que no le terminan de convencer (detalles por concretar).
 - **Revisar los textos** de la página principal y de la de formación (contenido de `cv.es.ts` / `cv.en.ts` y mensajes de interfaz).

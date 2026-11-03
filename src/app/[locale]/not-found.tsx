@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-// 404 traducido. La versión con estilo de plano llega en la Fase 10.
+// 404 traducido. La versión con estilo de plano llega en la Fase 12.
 export default async function NotFoundPage() {
   const t = await getTranslations("NotFoundPage");
 
